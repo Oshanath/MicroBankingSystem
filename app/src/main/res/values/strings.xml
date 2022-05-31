@@ -20,4 +20,5 @@
     <string name="enter_amount">Enter Amount</string>
     <string name="make_transaction">Make Transaction</string>
     <string name="critical_transaction">Critical Transaction</string>
+    <string name="btn_test">Test</string>
 </resources>
