@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/activity_deposit_fragment.xml" value="0.264" />
         <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/activity_options_fragment.xml" value="0.2" />
+        <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/activity_transfer_fragment.xml" value="0.264" />
+        <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/activity_withdraw_fragment.xml" value="0.234375" />
         <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/content_main.xml" value="0.20153985507246377" />
         <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/fragment_first.xml" value="0.20153985507246377" />
         <entry key="..\:/Lasith/Docs/4th Sem/DataBase/MicroBanking System/app/src/main/res/layout/fragment_options.xml" value="0.20153985507246377" />

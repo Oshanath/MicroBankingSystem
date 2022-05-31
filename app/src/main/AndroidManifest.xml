@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MicroBankingSystem">
         <activity
+            android:name=".WithdrawFragment"
+            android:exported="false" />
+        <activity
+            android:name=".DepositFragment"
+            android:exported="false" />
+        <activity
+            android:name=".TransferFragment"
+            android:exported="false" />
+        <activity
             android:name=".OptionsFragment"
             android:exported="false" />
         <activity
