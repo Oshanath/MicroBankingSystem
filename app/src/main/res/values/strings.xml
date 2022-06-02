@@ -9,4 +9,16 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="cashTransfer">Cash Transfer</string>
+    <string name="cashDeposit">Cash Deposit</string>
+    <string name="cashWithdrawal">Cash Withdrawal</string>
+    <string name="btnLogout">Logout</string>
+    <string name="your_ac_no">Your Account Number :</string>
+    <string name="to_ac_no">To Account :</string>
+    <string name="add_to_ac_no">Add Account Number</string>
+    <string name="amount">Amount :</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="make_transaction">Make Transaction</string>
+    <string name="critical_transaction">Critical Transaction</string>
+    <string name="btn_test">Test</string>
 </resources>
