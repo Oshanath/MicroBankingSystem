@@ -1,5 +1,6 @@
 package com.example.microbankingsystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -17,11 +18,14 @@ import com.example.microbankingsystem.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    Button btn_test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        btn_test = findViewById(R.id.button_test);
+
+        btn_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testact();
             }
         });
     }
@@ -72,5 +85,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void testact(){
+        Intent test = new Intent(this, OptionsFragment.class);
+        startActivity(test);
     }
 }
