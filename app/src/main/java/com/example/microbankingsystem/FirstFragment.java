@@ -12,8 +12,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.microbankingsystem.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
-
+    //comment
     private FragmentFirstBinding binding;
+
 
     @Override
     public View onCreateView(
