@@ -38,7 +38,7 @@ public class DepositFragment extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(DepositFragment.this, "Making transaction", Toast.LENGTH_SHORT).show();
-                TransactionModel transactionModel = new TransactionModel(1, accNo, Integer.parseInt(amount.toString()), type, date);
+                TransactionModel transactionModel = new TransactionModel(1, accNo, Integer.parseInt(amount.getText().toString()), type, date);
 
                 DatabaseHelper databaseHelper = new DatabaseHelper(DepositFragment.this);
 
