@@ -1,4 +1,4 @@
-package com.example.microbankingsystem;
+package com.example.microbankingsystem.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.microbankingsystem.R;
 import com.example.microbankingsystem.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
