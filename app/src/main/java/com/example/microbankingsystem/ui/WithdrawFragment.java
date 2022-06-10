@@ -1,8 +1,10 @@
-package com.example.microbankingsystem;
+package com.example.microbankingsystem.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.microbankingsystem.R;
 
 public class WithdrawFragment extends AppCompatActivity {
 
