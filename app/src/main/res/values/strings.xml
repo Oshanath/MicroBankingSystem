@@ -21,4 +21,6 @@
     <string name="make_transaction">Make Transaction</string>
     <string name="critical_transaction">Critical Transaction</string>
     <string name="btn_test">Test</string>
+    <string name="btn_transaction_select_normal">Normal</string>
+    <string name="btn_transaction_select_critical">Critical</string>
 </resources>
