@@ -32,5 +32,5 @@ public class VerificationPage extends AppCompatActivity {
         Intent intent = new Intent(this, OptionsFragment.class);
         startActivity(intent);
     }
-    // to make a change to commit
+
 }
