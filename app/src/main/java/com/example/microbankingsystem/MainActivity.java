@@ -3,6 +3,7 @@ package com.example.microbankingsystem;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.microbankingsystem.ui.OpeningWindow;
 import com.example.microbankingsystem.ui.OptionsFragment;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     Button btn_test;
+    Button btn_transaction_normal;
+    Button btn_transaction_critical;
 
       @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +52,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // initializing of buttons
         btn_test = findViewById(R.id.button_test);
+        btn_transaction_normal = findViewById(R.id.btn_transaction_normal);
+        btn_transaction_critical = findViewById(R.id.btn_transaction_critical);
 
+        // calling setOnClickListner on initialized buttons
         btn_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 testact();
             }
         });
+
+        btn_transaction_normal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openOpeningWindow();
+            }
+        });
+
+          btn_transaction_critical.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                  openOpeningWindow();
+              }
+          });
+
     }
 
     @Override
@@ -91,5 +113,10 @@ public class MainActivity extends AppCompatActivity {
     public void testact(){
         Intent test = new Intent(this, OptionsFragment.class);
         startActivity(test);
+    }
+
+    private void openOpeningWindow(){
+        Intent intent = new Intent(this, OpeningWindow.class);
+        startActivity(intent);
     }
 }

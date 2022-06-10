@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MicroBankingSystem">
         <activity
+            android:name=".ui.VerificationPage"
+            android:exported="false" />
+        <activity
             android:name=".ui.OpeningWindow"
             android:exported="false" />
         <activity
