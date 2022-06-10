@@ -3,7 +3,9 @@ package com.example.microbankingsystem;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.microbankingsystem.ui.OpeningWindow;
 import com.example.microbankingsystem.ui.OptionsFragment;
+import com.example.microbankingsystem.ui.VerificationPage;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,14 +51,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // initializing of buttons
         btn_test = findViewById(R.id.button_test);
 
+
+        // calling setOnClickListner on initialized buttons
         btn_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 testact();
             }
         });
+
     }
 
     @Override
@@ -89,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testact(){
-        Intent test = new Intent(this, OptionsFragment.class);
+        Intent test = new Intent(this, OpeningWindow.class);
         startActivity(test);
     }
+
 }
