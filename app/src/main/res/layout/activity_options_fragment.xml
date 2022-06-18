@@ -19,35 +19,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_cashTrans"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:text="@string/cashTransfer" />
-
-    <Button
         android:id="@+id/btn_deposit"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="160dp"
+        android:text="@string/cashDeposit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_cashTrans"
-        tools:text="@string/cashDeposit" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/btn_withdraw"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="@string/cashWithdrawal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_deposit"
-        tools:text="@string/cashWithdrawal" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_deposit" />
 
     <Button
         android:id="@+id/btn_logout"
@@ -55,6 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:text="@string/btnLogout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="@string/btnLogout" />
