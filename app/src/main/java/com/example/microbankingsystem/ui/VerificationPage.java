@@ -54,7 +54,7 @@ public class VerificationPage extends AppCompatActivity {
             System.out.println("Works");
             OkHttpClient client = new OkHttpClient();
 
-            Request request = new Request.Builder().url("https://www.google.lk/").build();
+            Request request = new Request.Builder().url("http://10.0.2.2:8083/syncAgent/190488J").build();
 
             okhttp3.Response response = null;
             try {

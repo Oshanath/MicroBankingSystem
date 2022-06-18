@@ -15,6 +15,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AMOUNT = "AMOUNT";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_TRANS_DATE = "TRANS_DATE";
+    public static final String TABLE_ACCOUNT = "ACCOUNT";
+    public static final String COLUMN_ACCOUNT_NO = "ACC_NO";
+    public static final String COLUMN_BALANCE = "BALANCE";
+    public static final String COLUMN_JOINT = "JOINT";
+
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "transactions.db", null, 1);
@@ -22,8 +27,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " INTEGER NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-        sqLiteDatabase.execSQL(createTable);
+        String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
+        sqLiteDatabase.execSQL(createTransactionTable);
+        String createAccountTable = "CREATE TABLE " + TABLE_ACCOUNT + "(" + COLUMN_ACCOUNT_NO + "STRING PRIMARY KEY NOT NULL" + "," + COLUMN_BALANCE + "DOUBLE NOT NULL" + "," + COLUMN_JOINT + "BOOL NOT NULL" + ")";
+        sqLiteDatabase.execSQL(createAccountTable);
     }
 
     @Override
