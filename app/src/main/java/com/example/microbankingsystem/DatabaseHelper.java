@@ -2,10 +2,15 @@ package com.example.microbankingsystem;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -55,5 +60,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else{
             return true;
         }
+    }
+
+    public List<TransactionModel> getAllTransactions(){
+
+        List<TransactionModel> allTransactions = new ArrayList<>();
+
+        String getTransactionQuery = "SELECT * FROM " + TRANSACTIONS;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(getTransactionQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int ID = cursor.getInt(0);
+                String accNo = cursor.getString(1);
+                double amount = cursor.getDouble(2);
+                String type = cursor.getString(3);
+                String date = cursor.getString(4);
+                TransactionModel tmp_trans = new TransactionModel(ID, accNo, amount, type, date);
+                allTransactions.add(tmp_trans);
+            } while (cursor.moveToNext());
+        } else {
+        }
+
+        cursor.close();
+        //db.close();
+        return allTransactions;
     }
 }

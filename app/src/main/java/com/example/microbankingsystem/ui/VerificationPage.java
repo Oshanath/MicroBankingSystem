@@ -12,6 +12,7 @@ import com.example.microbankingsystem.R;
 
 import java.io.IOException;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -51,10 +52,13 @@ public class VerificationPage extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Object[] objects) {
-            System.out.println("Works");
             OkHttpClient client = new OkHttpClient();
 
-            Request request = new Request.Builder().url("http://10.0.2.2:8083/syncAgent/190488J").build();
+            String agentID = "190488J";
+
+            String url = "http://10.0.2.2:8083/syncAgent/" + agentID;
+
+            Request request = new Request.Builder().url(url).build();
 
             okhttp3.Response response = null;
             try {
