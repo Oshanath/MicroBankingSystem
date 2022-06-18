@@ -19,17 +19,17 @@ public class OptionsFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options_fragment);
 
-        btn_cashTransfer = findViewById(R.id.btn_cashTrans);
+        //btn_cashTransfer = findViewById(R.id.btn_cashTrans);
         btn_cashDeposit = findViewById(R.id.btn_deposit);
         btn_cashWithdrawal = findViewById(R.id.btn_withdraw);
         btn_logout = findViewById(R.id.btn_logout);
 
-        btn_cashTransfer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTransferWindow();
-            }
-        });
+//        btn_cashTransfer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openTransferWindow();
+//            }
+//        });
 
         btn_cashDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,17 +47,15 @@ public class OptionsFragment extends AppCompatActivity {
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-            }
+            public void onClick(View v) { openOpeningWindow();}
         });
 
     }
 
-    public void openTransferWindow(){
-        Intent transferIntent =  new Intent(this, TransferFragment.class);
-        startActivity(transferIntent);
-    }
+//    public void openTransferWindow(){
+//        Intent transferIntent =  new Intent(this, TransferFragment.class);
+//        startActivity(transferIntent);
+//    }
 
     public void openDepositWindow(){
         Intent depositIntent = new Intent(this, DepositFragment.class);
@@ -67,6 +65,11 @@ public class OptionsFragment extends AppCompatActivity {
     public void openWithdrawalWindow(){
         Intent withdrawIntent = new Intent(this, WithdrawFragment.class);
         startActivity(withdrawIntent);
+    }
+
+    public void openOpeningWindow(){
+        Intent openingIntent = new Intent(this, OpeningWindow.class);
+        startActivity(openingIntent);
     }
 
 }
