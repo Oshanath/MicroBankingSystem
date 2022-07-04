@@ -3,9 +3,9 @@ package com.example.microbankingsystem;
 public class AccountModel {
     private String accountNo;
     private double balance;
-    private boolean joint;
+    private int joint;
 
-    public AccountModel(String accountNo, double balance, boolean joint){
+    public AccountModel(String accountNo, double balance, int joint){
         this.accountNo = accountNo;
         this.balance = balance;
         this.joint = joint;
@@ -19,7 +19,7 @@ public class AccountModel {
         return balance;
     }
 
-    public boolean isJoint() {
+    public int isJoint() {
         return joint;
     }
 
@@ -31,7 +31,7 @@ public class AccountModel {
         this.balance = balance;
     }
 
-    public void setJoint(boolean joint) {
+    public void setJoint(int joint) {
         this.joint = joint;
     }
 }
