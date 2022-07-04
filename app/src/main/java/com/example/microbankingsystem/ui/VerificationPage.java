@@ -7,19 +7,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.microbankingsystem.R;
 
 import java.io.IOException;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 public class VerificationPage extends AppCompatActivity {
 
     Button btn_verification_check, btn_sync;
+    TextView tv_nic, tv_acc, tv_pin;
+    String nic, acc_no, pin;
 
 
     @Override
@@ -29,13 +30,16 @@ public class VerificationPage extends AppCompatActivity {
 
         btn_verification_check = findViewById(R.id.btn_verification_check);
         btn_sync = findViewById(R.id.btn_sync);
+        tv_acc = findViewById(R.id.txt_acc_no);
+        tv_nic = findViewById(R.id.txt_nic_num);
+        tv_pin = findViewById(R.id.txt_pin);
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Response response = new Response();
-                response.execute();
+                Sync sync = new Sync();
+                sync.execute();
 
             }
         });
@@ -43,12 +47,17 @@ public class VerificationPage extends AppCompatActivity {
         btn_verification_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                nic = (String) tv_nic.getText();
+                acc_no = String tv_
+
+
                 openOptionsFragment();
             }
         });
     }
 
-    public class Response extends AsyncTask {
+    public class Sync extends AsyncTask {
 
         @Override
         protected String doInBackground(Object[] objects) {
