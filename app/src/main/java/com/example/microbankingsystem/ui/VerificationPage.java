@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.DatabaseHelper;
@@ -38,6 +39,7 @@ public class VerificationPage extends AppCompatActivity {
     String agentID, url;
     Request request;
     DatabaseHelper verify_databaseHelper;
+    String instance_type;
 
 
     @Override
@@ -56,7 +58,10 @@ public class VerificationPage extends AppCompatActivity {
 
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
 
-        //verify_databaseHelper.addAccount(new AccountModel("101", 32.99, 1));
+        verify_databaseHelper.addAccount(new AccountModel("101", 32.99, 1));
+
+        instance_type = "Normal";
+//        String instance_type = "Critical";
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,8 +77,28 @@ public class VerificationPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-            Verify verify = new Verify();
-            verify.execute();
+                if( instance_type.equals("Critical")) {
+
+                    Verify verify = new Verify();
+                    verify.execute();
+
+                }
+                else{
+
+                    nic = String.valueOf(tv_nic.getText());
+                    acc_no = String.valueOf(tv_acc.getText());
+                    pin = String.valueOf(tv_pin.getText());
+
+                    List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+
+                    if( existing_accounts.contains(acc_no)){
+                        Toast.makeText(VerificationPage.this, "verified", Toast.LENGTH_SHORT).show();
+                        openOptionsFragment(verify_databaseHelper.getAccount(acc_no));
+                    }
+                    else{
+                        Toast.makeText(VerificationPage.this, "Unverified", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -153,15 +178,15 @@ public class VerificationPage extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
-            openOptionsFragment();
+            //openOptionsFragment();
 
             return null;
         }
     }
 
-    private void openOptionsFragment(){
+    private void openOptionsFragment(AccountModel accountModel){
         Intent intent = new Intent(this, OptionsFragment.class);
+        intent.putExtra("Account", accountModel);
         startActivity(intent);
     }
 

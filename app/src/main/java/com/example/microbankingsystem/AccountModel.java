@@ -1,6 +1,8 @@
 package com.example.microbankingsystem;
 
-public class AccountModel {
+import java.io.Serializable;
+
+public class AccountModel implements Serializable {
     private String accountNo;
     private double balance;
     private int joint;
@@ -9,6 +11,15 @@ public class AccountModel {
         this.accountNo = accountNo;
         this.balance = balance;
         this.joint = joint;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountModel{" +
+                "accountNo='" + accountNo + '\'' +
+                ", balance=" + balance +
+                ", joint=" + joint +
+                '}';
     }
 
     public String getAccountNo() {
