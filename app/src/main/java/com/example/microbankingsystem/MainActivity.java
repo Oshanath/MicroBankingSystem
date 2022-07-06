@@ -1,6 +1,7 @@
 package com.example.microbankingsystem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.microbankingsystem.ui.OpeningWindow;
@@ -8,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -64,9 +66,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AlarmHandler alarmHandler = new AlarmHandler(this);
-        alarmHandler.cancelAlarm(SyncService.class);
-        alarmHandler.setAlarm(SyncService.class);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+        if(!previouslyStarted) {
+          SharedPreferences.Editor edit = prefs.edit();
+          edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+          edit.commit();
+          //function
+            AlarmHandler alarmHandler = new AlarmHandler(this);
+            alarmHandler.cancelAlarm(SyncService.class);
+            alarmHandler.setAlarm(SyncService.class);
+        }
 
     }
 
