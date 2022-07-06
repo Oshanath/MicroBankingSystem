@@ -38,7 +38,7 @@ public class OptionsFragment extends AppCompatActivity {
         btn_cashWithdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWithdrawalWindow();
+                openWithdrawalWindow(accountModel, instance_type);
             }
         });
 
@@ -56,8 +56,10 @@ public class OptionsFragment extends AppCompatActivity {
         startActivity(depositIntent);
     }
 
-    public void openWithdrawalWindow(){
+    public void openWithdrawalWindow(AccountModel accountModel, String instance_type){
         Intent withdrawIntent = new Intent(this, WithdrawFragment.class);
+        withdrawIntent.putExtra("Account", accountModel);
+        withdrawIntent.putExtra("i_type", instance_type);
         startActivity(withdrawIntent);
     }
 

@@ -147,6 +147,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return accountModel;
     }
 
+    public Double getAccountBalance(String acc_no){
+
+        Double balance = null;
+        Cursor cursor = readAllFromTable(ACCOUNTS);
+
+        if (cursor.moveToFirst()){
+            do{
+                if(cursor.getString(0).equals(acc_no)) {
+                    balance = cursor.getDouble(1);
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }else{
+            return null;
+        }
+
+        return balance;
+    }
+
     private Cursor readAllFromTable(String dbName){
         String getTransactionQuery = "SELECT * FROM " + dbName;
         SQLiteDatabase db = this.getReadableDatabase();

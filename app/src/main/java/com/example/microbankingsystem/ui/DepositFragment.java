@@ -63,8 +63,6 @@ public class DepositFragment extends AppCompatActivity {
 
                     if (success) {
                         openOptionsFragment(accountModel, instance_type);
-                    } else {
-                        Toast.makeText(DepositFragment.this, "" + success, Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
