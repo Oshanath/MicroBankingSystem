@@ -23,12 +23,12 @@ public class AlarmHandler {
 
         if (alarmManager != null){
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 17);
-            calendar.set(Calendar.MINUTE, 43);
+            calendar.set(Calendar.HOUR_OF_DAY, 15);
+            calendar.set(Calendar.MINUTE, 00);
             calendar.set(Calendar.SECOND, 00);
             long firstMillis = calendar.getTimeInMillis();
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 65000, pIntent); //AlarmManager.INTERVAL_DAY
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis, AlarmManager.INTERVAL_DAY, pIntent);
             Toast.makeText(context, "Alarm is set.", Toast.LENGTH_SHORT).show();
         }
     }

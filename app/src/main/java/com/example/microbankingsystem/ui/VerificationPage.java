@@ -30,6 +30,13 @@ public class VerificationPage extends AppCompatActivity {
         btn_verification_check = findViewById(R.id.btn_verification_check);
         btn_sync = findViewById(R.id.btn_sync);
 
+        Bundle extras;
+        extras = getIntent().getExtras();
+        String transaction_type = extras.getString("type");
+        if (transaction_type.equals("normal")){
+            btn_sync.setVisibility(View.INVISIBLE);
+        }
+
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
