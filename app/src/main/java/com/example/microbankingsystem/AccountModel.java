@@ -1,14 +1,25 @@
 package com.example.microbankingsystem;
 
-public class AccountModel {
+import java.io.Serializable;
+
+public class AccountModel implements Serializable {
     private String accountNo;
     private double balance;
-    private boolean joint;
+    private int joint;
 
-    public AccountModel(String accountNo, double balance, boolean joint){
+    public AccountModel(String accountNo, double balance, int joint){
         this.accountNo = accountNo;
         this.balance = balance;
         this.joint = joint;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountModel{" +
+                "accountNo='" + accountNo + '\'' +
+                ", balance=" + balance +
+                ", joint=" + joint +
+                '}';
     }
 
     public String getAccountNo() {
@@ -19,7 +30,7 @@ public class AccountModel {
         return balance;
     }
 
-    public boolean isJoint() {
+    public int isJoint() {
         return joint;
     }
 
@@ -31,7 +42,7 @@ public class AccountModel {
         this.balance = balance;
     }
 
-    public void setJoint(boolean joint) {
+    public void setJoint(int joint) {
         this.joint = joint;
     }
 }

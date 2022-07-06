@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class TransactionModel{
 
-    int ID;
-    double amount;
-    String accNo, type;
-    String date;
+    private int ID;
+    private double amount;
+    private String accNo, type;
+    private String date;
 
     public TransactionModel(int ID, String accNo, double amount, String type, String date) {
         this.ID = ID;
