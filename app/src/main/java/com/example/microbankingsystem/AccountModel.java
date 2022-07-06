@@ -5,12 +5,46 @@ import java.io.Serializable;
 public class AccountModel implements Serializable {
     private String accountNo;
     private double balance;
-    private int joint;
+    private String type;
+    private int pin;
 
-    public AccountModel(String accountNo, double balance, int joint){
+    public AccountModel(String accountNo, double balance, String type, int pin) {
         this.accountNo = accountNo;
         this.balance = balance;
-        this.joint = joint;
+        this.type = type;
+        this.pin = pin;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getPin() {
+        return pin;
+    }
+
+    public void setPin(int pin) {
+        this.pin = pin;
     }
 
     @Override
@@ -18,31 +52,8 @@ public class AccountModel implements Serializable {
         return "AccountModel{" +
                 "accountNo='" + accountNo + '\'' +
                 ", balance=" + balance +
-                ", joint=" + joint +
+                ", type='" + type + '\'' +
+                ", pin=" + pin +
                 '}';
-    }
-
-    public String getAccountNo() {
-        return accountNo;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public int isJoint() {
-        return joint;
-    }
-
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public void setJoint(int joint) {
-        this.joint = joint;
     }
 }

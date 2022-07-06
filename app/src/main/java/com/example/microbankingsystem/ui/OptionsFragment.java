@@ -14,39 +14,31 @@ import java.io.Serializable;
 
 public class OptionsFragment extends AppCompatActivity {
 
-    //Reference to Buttons
+    Button btn_cashDeposit, btn_cashWithdrawal, btn_logout;
 
-    Button btn_cashTransfer, btn_cashDeposit, btn_cashWithdrawal, btn_logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options_fragment);
 
-        //btn_cashTransfer = findViewById(R.id.btn_cashTrans);
         btn_cashDeposit = findViewById(R.id.btn_deposit);
         btn_cashWithdrawal = findViewById(R.id.btn_withdraw);
         btn_logout = findViewById(R.id.btn_logout);
 
-        System.out.println(((AccountModel)getIntent().getSerializableExtra("Account")).toString());
-
-//        btn_cashTransfer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openTransferWindow();
-//            }
-//        });
+        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
+        String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
         btn_cashDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDepositWindow();
+                openDepositWindow(accountModel, instance_type);
             }
         });
 
         btn_cashWithdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWithdrawalWindow();
+                openWithdrawalWindow(accountModel, instance_type);
             }
         });
 
@@ -57,18 +49,17 @@ public class OptionsFragment extends AppCompatActivity {
 
     }
 
-//    public void openTransferWindow(){
-//        Intent transferIntent =  new Intent(this, TransferFragment.class);
-//        startActivity(transferIntent);
-//    }
-
-    public void openDepositWindow(){
+    public void openDepositWindow(AccountModel accountModel, String instance_type){
         Intent depositIntent = new Intent(this, DepositFragment.class);
+        depositIntent.putExtra("Account", accountModel);
+        depositIntent.putExtra("i_type", instance_type);
         startActivity(depositIntent);
     }
 
-    public void openWithdrawalWindow(){
+    public void openWithdrawalWindow(AccountModel accountModel, String instance_type){
         Intent withdrawIntent = new Intent(this, WithdrawFragment.class);
+        withdrawIntent.putExtra("Account", accountModel);
+        withdrawIntent.putExtra("i_type", instance_type);
         startActivity(withdrawIntent);
     }
 
