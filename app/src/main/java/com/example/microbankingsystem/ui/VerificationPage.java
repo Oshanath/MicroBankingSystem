@@ -156,6 +156,7 @@ public class VerificationPage extends AppCompatActivity {
                 jsonObject.put("nic", nic);
                 jsonObject.put("acc_no", acc_no);
                 jsonObject.put("pin", pin);
+                jsonObject.put("agentID", agentID);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -163,7 +164,7 @@ public class VerificationPage extends AppCompatActivity {
             System.out.println(jsonObject);
 
             //URL to verify
-            url = "http://10.0.2.2:8083/syncAgent/" + agentID;
+            url = "http://10.0.2.2:8083/criticalVerify";
 
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
 
