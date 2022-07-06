@@ -22,6 +22,9 @@ import org.json.*;
 
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +63,8 @@ public class VerificationPage extends AppCompatActivity {
 
         verify_databaseHelper.addAccount(new AccountModel("101", 32.99, 1));
 
-        instance_type = "Normal";
-//        String instance_type = "Critical";
+//        instance_type = "Normal";
+        instance_type = "Critical";
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +169,7 @@ public class VerificationPage extends AppCompatActivity {
             //URL to verify
             url = "http://10.0.2.2:8083/criticalVerify";
 
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObject.toString());
 
             request = new Request.Builder().url(url).post(requestBody).build();
 
@@ -189,6 +192,24 @@ public class VerificationPage extends AppCompatActivity {
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
         startActivity(intent);
+    }
+
+    public static String hash(String s){
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
+
+            for(int i = 0; i < hash.length; i++){
+                stringBuilder.append((char)(hash[i] > 0 ? hash[i] : hash[i] + 256));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString();
     }
 
 }
