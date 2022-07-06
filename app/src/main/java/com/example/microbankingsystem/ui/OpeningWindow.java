@@ -23,25 +23,25 @@ public class OpeningWindow extends AppCompatActivity {
         btn_transaction_normal = findViewById(R.id.btn_transaction_normal);
         btn_transaction_critical = findViewById(R.id.btn_transaction_critical);
 
-
         btn_transaction_normal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openVerificationWindow();
+                openVerificationWindow("n");
             }
         });
 
         btn_transaction_critical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openVerificationWindow();
+                openVerificationWindow("c");
             }
         });
 
     }
 
-    public void openVerificationWindow(){
+    public void openVerificationWindow(String instance_type){
         Intent intent = new Intent(this, VerificationPage.class);
+        intent.putExtra("i_type", instance_type);
         startActivity(intent);
     }
 

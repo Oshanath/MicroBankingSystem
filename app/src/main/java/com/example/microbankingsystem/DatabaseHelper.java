@@ -22,7 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ACCOUNTS = "ACCOUNTS";
     public static final String COLUMN_ACCOUNT_NO = "ACCOUNT_NO";
     public static final String COLUMN_BALANCE = "BALANCE";
-    public static final String COLUMN_JOINT = "JOINT";
+    public static final String COLUMN_PIN = "PIN";
+    public static final String COLUMN_ACCOUNT_TYPE = "ACCOUNT_TYPE";
 
 
     public DatabaseHelper(@Nullable Context context) {
@@ -32,11 +33,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-
-        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_JOINT + " INTEGER NOT NULL)";
+        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " INTEGER NOT NULL)";
         sqLiteDatabase.execSQL(createAccountTable);
         sqLiteDatabase.execSQL(createTransactionTable);
-        System.out.println("Works");
     }
 
     @Override
@@ -97,7 +96,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cv.put(COLUMN_ACCOUNT_NO, account.getAccountNo());
         cv.put(COLUMN_BALANCE, account.getBalance());
-        cv.put(COLUMN_JOINT, account.isJoint());
+        cv.put(COLUMN_ACCOUNT_TYPE, account.getType());
+        cv.put(COLUMN_PIN, account.getPin());
 
         long insert = sqLiteDatabase.insert(ACCOUNTS, null, cv);
         if(insert==-1){
@@ -134,8 +134,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do{
                 if(cursor.getString(0).equals(acc_no)) {
                     Double balance = cursor.getDouble(1);
-                    int Joint = cursor.getInt(2);
-                    accountModel = new AccountModel(acc_no, balance, Joint);
+                    String acc_type = cursor.getString(2);
+                    int pin = cursor.getInt(3);
+                    accountModel = new AccountModel(acc_no, balance, acc_type, pin);
                     break;
                 }
             }while(cursor.moveToNext());
