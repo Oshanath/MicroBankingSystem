@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,49 +46,55 @@ public class DepositFragment extends AppCompatActivity {
         type = "Deposit";
         date = "2022/06/18";
 
-        String instance_type = "Normal";
-//        String instance_type = "Critical";
-
+        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
+        String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
         make_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DepositFragment.this, "Making transaction", Toast.LENGTH_SHORT).show();
+
                 TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
 
-
-                if(instance_type.equals("Normal")) {
+                if(instance_type.equals("n")) {
                     DatabaseHelper databaseHelper = new DatabaseHelper(DepositFragment.this);
 
                     boolean success = databaseHelper.record_transaction(transactionModel);
-                    //Toast.makeText(DepositFragment.this, ""+success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DepositFragment.this, ""+success, Toast.LENGTH_SHORT).show();
 
                     if (success) {
-                        openOptionsWindow();
+                        openOptionsFragment(accountModel, instance_type);
                     } else {
                         Toast.makeText(DepositFragment.this, "" + success, Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
-                    JSONObject jsonObject = new JSONObject();
 
-                    try {
-                        jsonObject.put("acc_no", transactionModel.getAccNo());
-                        jsonObject.put("amount", transactionModel.getAmount());
-                        jsonObject.put("type", transactionModel.getType());
-                        jsonObject.put("date", transactionModel.getDate());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+//                    JSONObject jsonObject = new JSONObject();
+//
+//                    try {
+//                        jsonObject.put("acc_no", transactionModel.getAccNo());
+//                        jsonObject.put("amount", transactionModel.getAmount());
+//                        jsonObject.put("type", transactionModel.getType());
+//                        jsonObject.put("date", transactionModel.getDate());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }\\\
+
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("acc_no", transactionModel.getAccNo())
+                            .add("amount", String.valueOf(transactionModel.getAmount()))
+                            .add("type",transactionModel.getType())
+                            .add("date", transactionModel.getDate())
+                            .build();
 
                     //URL to verify
                     String url = "http://10.0.2.2:8083/syncAgent/";
 
                     client = new OkHttpClient();
 
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                    //RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
 
-                    Request request = new Request.Builder().url(url).post(requestBody).build();
+                    Request request = new Request.Builder().url(url).post(formBody).build();
 
                     okhttp3.Response response = null;
 
@@ -103,8 +110,10 @@ public class DepositFragment extends AppCompatActivity {
 
     }
 
-    public void openOptionsWindow(){
-        Intent normalWithdraw = new Intent(this, OptionsFragment.class);
-        startActivity(normalWithdraw);
+    private void openOptionsFragment(AccountModel accountModel, String instance_type){
+        Intent intent = new Intent(this, OptionsFragment.class);
+        intent.putExtra("Account", accountModel);
+        intent.putExtra("i_type", instance_type);
+        startActivity(intent);
     }
 }

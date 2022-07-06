@@ -30,6 +30,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okio.Buffer;
 
 public class VerificationPage extends AppCompatActivity {
@@ -82,7 +83,7 @@ public class VerificationPage extends AppCompatActivity {
                     boolean exist = checkLocalDB();
                     if(exist){
                         makeToast("Verified");
-                        openOptionsFragment(verify_databaseHelper.getAccount(acc_no));
+                        openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
                     }
                     else{
                         makeToast("Unverified");
@@ -140,6 +141,17 @@ public class VerificationPage extends AppCompatActivity {
 
             url = "http://10.0.2.2:8083/criticalVerify";
 
+//            JSONObject jsonObject = new JSONObject();
+//
+//            try {
+//                jsonObject.put("nic", nic);
+//                jsonObject.put("acc_no", acc_no);
+//                jsonObject.put("pin", pin);
+//                jsonObject.put("agentID", agentID);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
             RequestBody formBody = new FormBody.Builder()
                     .add("nic", nic)
                     .add("acc_no", acc_no)
@@ -149,7 +161,7 @@ public class VerificationPage extends AppCompatActivity {
 
             Request request = new Request.Builder().url(url).post(formBody).build();
 
-            okhttp3.Response response = null;
+            Response response = null;
 
             try {
                 response = client.newCall(request).execute();
@@ -164,9 +176,10 @@ public class VerificationPage extends AppCompatActivity {
         }
     }
 
-    private void openOptionsFragment(AccountModel accountModel){
+    private void openOptionsFragment(AccountModel accountModel, String instance_type){
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
+        intent.putExtra("i_type", instance_type);
         startActivity(intent);
     }
 
