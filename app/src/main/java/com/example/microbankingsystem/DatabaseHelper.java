@@ -47,14 +47,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean record_transaction(TransactionModel transactionModel){
 
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues cv = new ContentValues();
+        ContentValues cv_t = new ContentValues();
 
-        cv.put(COLUMN_ACC_NO, transactionModel.getAccNo());
-        cv.put(COLUMN_AMOUNT, transactionModel.getAmount());
-        cv.put(COLUMN_TYPE, transactionModel.getType());
-        cv.put(COLUMN_TRANS_DATE, transactionModel.getDate().toString());
+        cv_t.put(COLUMN_ACC_NO, transactionModel.getAccNo());
+        cv_t.put(COLUMN_AMOUNT, transactionModel.getAmount());
+        cv_t.put(COLUMN_TYPE, transactionModel.getType());
+        cv_t.put(COLUMN_TRANS_DATE, transactionModel.getDate().toString());
 
-        long insert = db.insert(TRANSACTIONS, null, cv);
+        AccountModel accountModel = getAccount(transactionModel.getAccNo());
+
+
+        Double new_balance = Double.valueOf(0);
+        if(transactionModel.getType().equals("Deposit")){
+            new_balance = accountModel.getBalance() + transactionModel.getAmount();
+        }
+        else if ( transactionModel.getType().equals("Withdraw")){
+            new_balance = accountModel.getBalance() - transactionModel.getAmount();
+        }
+
+        String updateQuery = "UPDATE "+ACCOUNTS+" SET "+COLUMN_BALANCE+" = "+new_balance+" WHERE "+COLUMN_ACCOUNT_NO+" = "+transactionModel.getAccNo();
+        db.execSQL(updateQuery);
+
+        long insert = db.insert(TRANSACTIONS, null, cv_t);
+
         if(insert==-1){
             return false;
         }
@@ -95,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int lastID = 0;
 
-        Cursor cursor = readAllFromTable(ACCOUNTS);
+        Cursor cursor = readAllFromTable(TRANSACTIONS);
 
         if(cursor.moveToLast()){
             lastID = cursor.getInt(0);
@@ -111,8 +126,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String truncateTable = "DELETE FROM " + ACCOUNTS ;
-
+        String truncateTable = "DELETE FROM " + TRANSACTIONS ;
+        String resetKey = "UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'TRANSACTIONS'";
+        db.execSQL(resetKey);
         db.execSQL(truncateTable);
     }
 
@@ -181,7 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Double getAccountBalance(String acc_no){
 
-        Double balance = null;
+        Double balance = Double.valueOf(0);
         Cursor cursor = readAllFromTable(ACCOUNTS);
 
         if (cursor.moveToFirst()){
