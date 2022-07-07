@@ -65,8 +65,8 @@ public class VerificationPage extends AppCompatActivity {
 
         Bundle extras;
         extras = getIntent().getExtras();
-        String transaction_type = extras.getString("type");
-        if (transaction_type.equals("normal")){
+        String transaction_type = extras.getString("i_type");
+        if (transaction_type.equals("n")){
             btn_sync.setVisibility(View.INVISIBLE);
         }
 
@@ -147,34 +147,43 @@ public class VerificationPage extends AppCompatActivity {
         @Override
         protected String doInBackground(Object[] objects){
 
-            getEditTextValues();
+            if(getEditTextValues()){
 
-            url = "http://10.0.2.2:8083/criticalVerify";
+                url = "http://10.0.2.2:8083/criticalVerify";
 
-            RequestBody formBody = new FormBody.Builder()
-                    .add("nic", nic)
-                    .add("acc_no", acc_no)
-                    .add("pin", pin)
-                    .add("agentID", agentID)
-                    .build();
+                RequestBody formBody = new FormBody.Builder()
+                        .add("nic", nic)
+                        .add("acc_no", acc_no)
+                        .add("pin", pin)
+                        .add("agentID", agentID)
+                        .build();
 
-            Request request = new Request.Builder().url(url).post(formBody).build();
+                Request request = new Request.Builder().url(url).post(formBody).build();
 
-            Response response = null;
+                Response response = null;
 
-            try {
-                response = client.newCall(request).execute();
-                JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
-                String success = jsonObject.getString("message");
-                if( success.equals("success")){
-                    double balance = jsonObject.getDouble("balance");
-                    String type = jsonObject.getString("type");
-                    AccountModel critical_acc = new AccountModel(acc_no, balance, type);
-                    openOptionsFragment(critical_acc, "c");
+                try {
+
+                    response = client.newCall(request).execute();
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
+                    String success = jsonObject.getString("message");
+
+                    if( success.equals("success")){
+                        double balance = jsonObject.getDouble("balance");
+                        String type = jsonObject.getString("type");
+                        AccountModel critical_acc = new AccountModel(acc_no, balance, type);
+                        openOptionsFragment(critical_acc, "c");
+                    }
+                    else if ( success.equals("wrong pin")) {
+                        makeToast("Incorrect Pin");
+                    }
+                    else if ( success.equals("unregistered")){
+                        makeToast("Account not registered in critical service");
+                    }
+
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
             }
 
             //openOptionsFragment();
@@ -214,8 +223,6 @@ public class VerificationPage extends AppCompatActivity {
 
     private boolean checkLocalDB() {
 
-        if(getEditTextValues()) {
-
             List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
 
             if (existing_accounts.contains(acc_no)) {
@@ -223,10 +230,7 @@ public class VerificationPage extends AppCompatActivity {
             } else {
                 return false;
             }
-        }
-        else{
-            return false;
-        }
+
     }
 
     private boolean getEditTextValues() {
@@ -235,7 +239,7 @@ public class VerificationPage extends AppCompatActivity {
         pin = String.valueOf(tv_pin.getText());
 
         if ( nic.equals("") || acc_no.equals("") || pin.equals("")){
-            makeToast("");
+            makeToast("Enter all details");
             return false;
         }
         else{
