@@ -19,10 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AMOUNT = "AMOUNT";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_TRANS_DATE = "TRANS_DATE";
-    public static final String TABLE_ACCOUNT = "ACCOUNT";
-    public static final String COLUMN_ACCOUNT_NO = "ACC_NO";
+    public static final String ACCOUNTS = "ACCOUNTS";
+    public static final String COLUMN_ACCOUNT_NO = "ACCOUNT_NO";
     public static final String COLUMN_BALANCE = "BALANCE";
-    public static final String COLUMN_JOINT = "JOINT";
+    public static final String COLUMN_PIN = "PIN";
+    public static final String COLUMN_ACCOUNT_TYPE = "ACCOUNT_TYPE";
 
 
     public DatabaseHelper(@Nullable Context context) {
@@ -32,9 +33,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-        sqLiteDatabase.execSQL(createTransactionTable);
-        String createAccountTable = "CREATE TABLE " + TABLE_ACCOUNT + "(" + COLUMN_ACCOUNT_NO + "STRING PRIMARY KEY NOT NULL" + "," + COLUMN_BALANCE + "DOUBLE NOT NULL" + "," + COLUMN_JOINT + "BOOL NOT NULL" + ")";
+        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " INTEGER NOT NULL)";
         sqLiteDatabase.execSQL(createAccountTable);
+        sqLiteDatabase.execSQL(createTransactionTable);
     }
 
     @Override
@@ -89,15 +90,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allTransactions;
     }
 
+    public int getLastID(){
+
+        int lastID = 0;
+
+        Cursor cursor = readAllFromTable(ACCOUNTS);
+
+        if(cursor.moveToLast()){
+            lastID = cursor.getInt(0);
+        }else{
+
+        }
+
+        return lastID;
+
+    }
+
+    public void clearTransactions(){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String truncateTable = "DELETE FROM " + ACCOUNTS ;
+
+        db.execSQL(truncateTable);
+    }
+
     public boolean addAccount(AccountModel account){
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_ACCOUNT_NO, account.getAccountNo());
         cv.put(COLUMN_BALANCE, account.getBalance());
-        cv.put(COLUMN_JOINT, account.isJoint());
+        cv.put(COLUMN_ACCOUNT_TYPE, account.getType());
+        cv.put(COLUMN_PIN, account.getPin());
 
-        long insert = sqLiteDatabase.insert(TABLE_ACCOUNT, null, cv);
+        long insert = sqLiteDatabase.insert(ACCOUNTS, null, cv);
         if(insert==-1){
             return false;
         }
@@ -106,19 +133,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<AccountModel> getAllAccounts(){
-        List<AccountModel> accounts = new ArrayList<>();
+    public List<String> getAllAccounts(){
+        List<String> accounts = new ArrayList<String>();
 
-        Cursor cursor = readAllFromTable(TABLE_ACCOUNT);
+        Cursor cursor = readAllFromTable(ACCOUNTS);
 
         if (cursor.moveToFirst()){
             do{
                 String accNo = cursor.getString(0);
-                double balance = cursor.getDouble(1);
-                int joint = cursor.getInt(2);
-                boolean isJoint = joint == 1;
-                AccountModel tmp_account = new AccountModel(accNo, balance, isJoint);
-                accounts.add(tmp_account);
+                accounts.add(accNo);
             }while(cursor.moveToNext());
         }else{
             return null;
@@ -127,11 +150,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return accounts;
     }
 
+    public AccountModel getAccount(String acc_no){
+
+        AccountModel accountModel = null;
+        Cursor cursor = readAllFromTable(ACCOUNTS);
+
+        if (cursor.moveToFirst()){
+            do{
+                if(cursor.getString(0).equals(acc_no)) {
+                    Double balance = cursor.getDouble(1);
+                    String acc_type = cursor.getString(2);
+                    int pin = cursor.getInt(3);
+                    accountModel = new AccountModel(acc_no, balance, acc_type, pin);
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }else{
+            return null;
+        }
+
+        return accountModel;
+    }
+
+    public Double getAccountBalance(String acc_no){
+
+        Double balance = null;
+        Cursor cursor = readAllFromTable(ACCOUNTS);
+
+        if (cursor.moveToFirst()){
+            do{
+                if(cursor.getString(0).equals(acc_no)) {
+                    balance = cursor.getDouble(1);
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }else{
+            return null;
+        }
+
+        return balance;
+    }
+
     private Cursor readAllFromTable(String dbName){
         String getTransactionQuery = "SELECT * FROM " + dbName;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(getTransactionQuery, null);
-        db.close();
+        //db.close();
         return cursor;
         // close the returning cursor when you use this function
     }

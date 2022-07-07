@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
         if(!previouslyStarted) {
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
