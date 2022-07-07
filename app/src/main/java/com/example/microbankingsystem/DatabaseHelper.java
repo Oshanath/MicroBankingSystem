@@ -3,6 +3,7 @@ package com.example.microbankingsystem;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -124,7 +125,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_ACCOUNT_TYPE, account.getType());
         cv.put(COLUMN_PIN, account.getPin());
 
-        long insert = sqLiteDatabase.insert(ACCOUNTS, null, cv);
+        long insert = -1;
+        try {
+            insert = sqLiteDatabase.insert(ACCOUNTS, null, cv);
+        } catch(SQLiteConstraintException e){
+            e.printStackTrace();
+        }
+
         if(insert==-1){
             return false;
         }
