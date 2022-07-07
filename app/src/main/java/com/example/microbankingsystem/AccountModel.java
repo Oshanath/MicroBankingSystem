@@ -15,6 +15,12 @@ public class AccountModel implements Serializable {
         this.pin = pin;
     }
 
+    public AccountModel(String accountNo, double balance, String type) {
+        this.accountNo = accountNo;
+        this.balance = balance;
+        this.type = type;
+    }
+
     public String getAccountNo() {
         return accountNo;
     }
