@@ -90,6 +90,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return allTransactions;
     }
 
+    public int getLastID(){
+
+        int lastID = 0;
+
+        Cursor cursor = readAllFromTable(ACCOUNTS);
+
+        if(cursor.moveToLast()){
+            lastID = cursor.getInt(0);
+        }else{
+
+        }
+
+        return lastID;
+
+    }
+
+    public void clearTransactions(){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String truncateTable = "DELETE FROM " + ACCOUNTS ;
+
+        db.execSQL(truncateTable);
+    }
+
     public boolean addAccount(AccountModel account){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

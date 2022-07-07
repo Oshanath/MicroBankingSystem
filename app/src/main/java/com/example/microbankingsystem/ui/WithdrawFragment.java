@@ -53,13 +53,15 @@ public class WithdrawFragment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
+                Double requested_amount = Double.parseDouble(amount.getText().toString());
+
+                TransactionModel transactionModel = new TransactionModel(1, accNo, requested_amount, type, date);
 
                 if(instance_type.equals("n")) {
 
                     DatabaseHelper withdrawDBHelper = new DatabaseHelper(WithdrawFragment.this);
 
-                    Double requested_amount = Double.parseDouble(amount.getText().toString());
+
 
                     if ( requested_amount < withdrawDBHelper.getAccountBalance(accNo)){
 
