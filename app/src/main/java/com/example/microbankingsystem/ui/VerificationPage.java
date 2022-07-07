@@ -40,7 +40,7 @@ public class VerificationPage extends AppCompatActivity {
 
     Button btn_verification_check, btn_sync;
     EditText tv_nic, tv_acc, tv_pin;
-    String nic, acc_no, pin;
+    String nic = "", acc_no = "", pin = "";
     OkHttpClient client;
     String agentID, url;
     DatabaseHelper verify_databaseHelper;
@@ -157,8 +157,16 @@ public class VerificationPage extends AppCompatActivity {
 
             try {
                 response = client.newCall(request).execute();
-                System.out.println(response.body().string());
-            } catch (IOException e) {
+                JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
+                String success = jsonObject.getString("message");
+                if( success.equals("success")){
+                    double balance = jsonObject.getDouble("balance");
+                    String type = jsonObject.getString("type");
+                    AccountModel critical_acc = new AccountModel(acc_no, balance, type);
+                    openOptionsFragment(critical_acc, "c");
+                }
+
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
@@ -199,22 +207,33 @@ public class VerificationPage extends AppCompatActivity {
 
     private boolean checkLocalDB() {
 
-        getEditTextValues();
+        if(getEditTextValues()) {
 
-        List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+            List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
 
-        if( existing_accounts.contains(acc_no)){
-            return true;
+            if (existing_accounts.contains(acc_no)) {
+                return true;
+            } else {
+                return false;
+            }
         }
         else{
             return false;
         }
     }
 
-    private void getEditTextValues() {
+    private boolean getEditTextValues() {
         nic = String.valueOf(tv_nic.getText());
         acc_no = String.valueOf(tv_acc.getText());
         pin = String.valueOf(tv_pin.getText());
+
+        if ( nic.equals("") || acc_no.equals("") || pin.equals("")){
+            makeToast("");
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     private void findByViews() {
