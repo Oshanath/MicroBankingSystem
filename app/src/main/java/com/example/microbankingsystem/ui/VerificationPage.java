@@ -61,7 +61,7 @@ public class VerificationPage extends AppCompatActivity {
 
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
 
-        verify_databaseHelper.addAccount(new AccountModel("101", 32.99, "adult", 999));
+        verify_databaseHelper.addAccount(new AccountModel("102", 32000.99, "adult", 999));
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,5 +223,5 @@ public class VerificationPage extends AppCompatActivity {
         tv_acc = findViewById(R.id.txt_acc_no);
         tv_nic = findViewById(R.id.txt_nic_num);
         tv_pin = findViewById(R.id.txt_pin);
-
+    }
 }
