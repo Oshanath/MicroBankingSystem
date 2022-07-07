@@ -19,7 +19,7 @@ public class DepositFragment extends AppCompatActivity {
 
     Button make_deposit;
     String accNo,type;
-    Date date;
+    String date;
     EditText amount;
 
     @Override
@@ -32,14 +32,14 @@ public class DepositFragment extends AppCompatActivity {
 
         accNo = "Thilina_Pakaya";
         type = "Deposit";
-        date = new Date();
+        date = "2022/06/18";
 
 
         make_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(DepositFragment.this, "Making transaction", Toast.LENGTH_SHORT).show();
-                TransactionModel transactionModel = new TransactionModel(1, accNo, Integer.parseInt(amount.getText().toString()), type, date);
+                TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
 
                 DatabaseHelper databaseHelper = new DatabaseHelper(DepositFragment.this);
 

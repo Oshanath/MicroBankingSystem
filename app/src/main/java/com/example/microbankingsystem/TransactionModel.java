@@ -4,11 +4,12 @@ import java.util.Date;
 
 public class TransactionModel{
 
-    int ID, amount;
+    int ID;
+    double amount;
     String accNo, type;
-    Date date;
+    String date;
 
-    public TransactionModel(int ID, String accNo, int amount, String type, Date date) {
+    public TransactionModel(int ID, String accNo, double amount, String type, String date) {
         this.ID = ID;
         this.accNo = accNo;
         this.amount = amount;
@@ -35,11 +36,11 @@ public class TransactionModel{
         this.ID = ID;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -59,11 +60,11 @@ public class TransactionModel{
         this.type = type;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

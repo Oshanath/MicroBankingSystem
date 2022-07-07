@@ -2,10 +2,14 @@ package com.example.microbankingsystem;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -15,6 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AMOUNT = "AMOUNT";
     public static final String COLUMN_TYPE = "TYPE";
     public static final String COLUMN_TRANS_DATE = "TRANS_DATE";
+    public static final String TABLE_ACCOUNT = "ACCOUNT";
+    public static final String COLUMN_ACCOUNT_NO = "ACC_NO";
+    public static final String COLUMN_BALANCE = "BALANCE";
+    public static final String COLUMN_JOINT = "JOINT";
+
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "transactions.db", null, 1);
@@ -22,8 +31,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " INTEGER NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-        sqLiteDatabase.execSQL(createTable);
+        String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
+        sqLiteDatabase.execSQL(createTransactionTable);
+        String createAccountTable = "CREATE TABLE " + TABLE_ACCOUNT + "(" + COLUMN_ACCOUNT_NO + "STRING PRIMARY KEY NOT NULL" + "," + COLUMN_BALANCE + "DOUBLE NOT NULL" + "," + COLUMN_JOINT + "BOOL NOT NULL" + ")";
+        sqLiteDatabase.execSQL(createAccountTable);
     }
 
     @Override
@@ -49,4 +60,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    public List<TransactionModel> getAllTransactions(){
+
+        List<TransactionModel> allTransactions = new ArrayList<>();
+
+        String getTransactionQuery = "SELECT * FROM " + TRANSACTIONS;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(getTransactionQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int ID = cursor.getInt(0);
+                String accNo = cursor.getString(1);
+                double amount = cursor.getDouble(2);
+                String type = cursor.getString(3);
+                String date = cursor.getString(4);
+                TransactionModel tmp_trans = new TransactionModel(ID, accNo, amount, type, date);
+                allTransactions.add(tmp_trans);
+            } while (cursor.moveToNext());
+        } else {
+        }
+
+        cursor.close();
+        //db.close();
+        return allTransactions;
+    }
+
+    public boolean addAccount(AccountModel account){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_ACCOUNT_NO, account.getAccountNo());
+        cv.put(COLUMN_BALANCE, account.getBalance());
+        cv.put(COLUMN_JOINT, account.isJoint());
+
+        long insert = sqLiteDatabase.insert(TABLE_ACCOUNT, null, cv);
+        if(insert==-1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public List<AccountModel> getAllAccounts(){
+        List<AccountModel> accounts = new ArrayList<>();
+
+        Cursor cursor = readAllFromTable(TABLE_ACCOUNT);
+
+        if (cursor.moveToFirst()){
+            do{
+                String accNo = cursor.getString(0);
+                double balance = cursor.getDouble(1);
+                int joint = cursor.getInt(2);
+                boolean isJoint = joint == 1;
+                AccountModel tmp_account = new AccountModel(accNo, balance, isJoint);
+                accounts.add(tmp_account);
+            }while(cursor.moveToNext());
+        }else{
+            return null;
+        }
+
+        return accounts;
+    }
+
+    private Cursor readAllFromTable(String dbName){
+        String getTransactionQuery = "SELECT * FROM " + dbName;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getTransactionQuery, null);
+        db.close();
+        return cursor;
+        // close the returning cursor when you use this function
+    }
+
 }
