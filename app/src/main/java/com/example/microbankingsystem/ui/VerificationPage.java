@@ -61,7 +61,7 @@ public class VerificationPage extends AppCompatActivity {
 
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
 
-        verify_databaseHelper.addAccount(new AccountModel("102", 32000.99, "adult", 999));
+        verify_databaseHelper.addAccount(new AccountModel("102", 20000.50, "adult", 999));
 
         Bundle extras;
         extras = getIntent().getExtras();

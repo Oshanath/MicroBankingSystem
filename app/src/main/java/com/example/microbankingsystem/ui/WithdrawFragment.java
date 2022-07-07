@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,13 +13,9 @@ import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.DatabaseHelper;
 import com.example.microbankingsystem.R;
 import com.example.microbankingsystem.TransactionModel;
+import com.example.microbankingsystem.UpdateCritical;
 
-import java.io.IOException;
-
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 
 
 public class WithdrawFragment extends AppCompatActivity {
@@ -41,19 +36,19 @@ public class WithdrawFragment extends AppCompatActivity {
         make_withdrawal = findViewById(R.id.btn_makeTransWithdraw);
         amount = findViewById(R.id.et_amount);
 
-        accNo = "0001";
-        type = "Withdraw";
-        date = "2022/07/05";
-
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
+        accNo = accountModel.getAccountNo();
+        type = "Withdraw";
+        date = "2022/07/05";
 
         make_withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Double requested_amount = Double.parseDouble(amount.getText().toString());
+                System.out.println(requested_amount);
 
                 TransactionModel transactionModel = new TransactionModel(1, accNo, requested_amount, type, date);
 
@@ -65,6 +60,15 @@ public class WithdrawFragment extends AppCompatActivity {
 
                         boolean success = withdrawDBHelper.record_transaction(transactionModel);
                         Toast.makeText(WithdrawFragment.this, ""+success, Toast.LENGTH_SHORT).show();
+
+                        if(withdrawDBHelper.getLastID() >= 5){
+
+                            UpdateCloud updateCloud =new UpdateCloud(withdrawDBHelper.getAllTransactions());
+                            updateCloud.execute();
+
+                            withdrawDBHelper.clearTransactions();
+
+                        }
 
                         if (success) {
                             openOptionsFragment(accountModel, instance_type);
