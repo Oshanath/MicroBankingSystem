@@ -61,8 +61,6 @@ public class WithdrawFragment extends AppCompatActivity {
 
                     DatabaseHelper withdrawDBHelper = new DatabaseHelper(WithdrawFragment.this);
 
-
-
                     if ( requested_amount < withdrawDBHelper.getAccountBalance(accNo)){
 
                         boolean success = withdrawDBHelper.record_transaction(transactionModel);
@@ -77,42 +75,8 @@ public class WithdrawFragment extends AppCompatActivity {
                     }
                 }
                 else{
-
-//                    JSONObject jsonObject = new JSONObject();
-//
-//                    try {
-//                        jsonObject.put("acc_no", transactionModel.getAccNo());
-//                        jsonObject.put("amount", transactionModel.getAmount());
-//                        jsonObject.put("type", transactionModel.getType());
-//                        jsonObject.put("date", transactionModel.getDate());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }\\\
-
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("acc_no", transactionModel.getAccNo())
-                            .add("amount", String.valueOf(transactionModel.getAmount()))
-                            .add("type",transactionModel.getType())
-                            .add("date", transactionModel.getDate())
-                            .build();
-
-                    //URL to verify
-                    String url = "http://10.0.2.2:8083/syncAgent/";
-
-                    client = new OkHttpClient();
-
-                    //RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-
-                    Request request = new Request.Builder().url(url).post(formBody).build();
-
-                    okhttp3.Response response = null;
-
-                    try {
-                        response = client.newCall(request).execute();
-                        System.out.println(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    UpdateCritical updateCritical = new UpdateCritical(transactionModel);
+                    updateCritical.execute();
                 }
             }
         });

@@ -61,6 +61,8 @@ public class DepositFragment extends AppCompatActivity {
                 TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
 
                 if(instance_type.equals("n")) {
+
+
                     deposit_DBHelper = new DatabaseHelper(DepositFragment.this);
 
                     boolean success = deposit_DBHelper.record_transaction(transactionModel);
@@ -81,30 +83,9 @@ public class DepositFragment extends AppCompatActivity {
                 }
                 else{
 
+                        UpdateCritical updateCritical = new UpdateCritical(transactionModel);
+                        updateCritical.execute();
 
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("acc_no", transactionModel.getAccNo())
-                            .add("amount", String.valueOf(transactionModel.getAmount()))
-                            .add("type",transactionModel.getType())
-                            .add("date", transactionModel.getDate())
-                            .build();
-
-                    System.out.println(formBody);
-
-                    String url = "http://10.0.2.2:8083/criticalTransaction";
-
-                    client = new OkHttpClient();
-
-                    Request request = new Request.Builder().url(url).post(formBody).build();
-
-                    okhttp3.Response response = null;
-
-                    try {
-                        response = client.newCall(request).execute();
-                        System.out.println(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         });
@@ -164,4 +145,5 @@ public class DepositFragment extends AppCompatActivity {
             return null;
         }
     }
+
 }

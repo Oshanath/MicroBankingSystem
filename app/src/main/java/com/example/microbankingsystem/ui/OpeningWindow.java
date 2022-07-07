@@ -26,14 +26,18 @@ public class OpeningWindow extends AppCompatActivity {
         btn_transaction_normal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 openVerificationWindow("n");
+
             }
         });
 
         btn_transaction_critical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            
                 openVerificationWindow("c");
+
             }
         });
 
@@ -42,6 +46,7 @@ public class OpeningWindow extends AppCompatActivity {
     public void openVerificationWindow(String instance_type){
         Intent intent = new Intent(this, VerificationPage.class);
         intent.putExtra("i_type", instance_type);
+
         startActivity(intent);
     }
 
