@@ -89,14 +89,18 @@ public class VerificationPage extends AppCompatActivity {
                     verify.execute();
 
                 }
-                else if (instance_type.equals("n")){
-                    boolean exist = checkLocalDB();
-                    if(exist){
-                        makeToast("Verified");
-                        openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
-                    }
-                    else{
-                        makeToast("Unverified");
+                else if (instance_type.equals("n")) {
+
+                    if (getEditTextValues()) {
+
+                        boolean exist = checkLocalDB();
+
+                        if (exist) {
+                            makeToast("Verified");
+                            openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
+                        } else {
+                            makeToast("Unverified");
+                        }
                     }
                 }
             }
@@ -218,7 +222,7 @@ public class VerificationPage extends AppCompatActivity {
     }
     
         private void makeToast(String message){
-        Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
     }
 
     private boolean checkLocalDB() {
