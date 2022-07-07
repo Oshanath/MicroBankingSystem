@@ -71,6 +71,8 @@ public class DepositFragment extends AppCompatActivity {
                         UpdateCloud updateCloud =new UpdateCloud();
                         updateCloud.execute();
 
+                        deposit_DBHelper.clearTransactions();
+
                     }
 
                     if (success) {
@@ -79,16 +81,6 @@ public class DepositFragment extends AppCompatActivity {
                 }
                 else{
 
-//                    JSONObject jsonObject = new JSONObject();
-//
-//                    try {
-//                        jsonObject.put("acc_no", transactionModel.getAccNo());
-//                        jsonObject.put("amount", transactionModel.getAmount());
-//                        jsonObject.put("type", transactionModel.getType());
-//                        jsonObject.put("date", transactionModel.getDate());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }\\\
 
                     RequestBody formBody = new FormBody.Builder()
                             .add("acc_no", transactionModel.getAccNo())
