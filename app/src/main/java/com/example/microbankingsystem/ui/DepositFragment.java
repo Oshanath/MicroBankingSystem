@@ -50,6 +50,7 @@ public class DepositFragment extends AppCompatActivity {
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
+
         accNo = accountModel.getAccountNo();
         type = "Deposit";
         date = "2022/07/05";
