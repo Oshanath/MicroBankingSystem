@@ -41,12 +41,13 @@ public class WithdrawFragment extends AppCompatActivity {
         make_withdrawal = findViewById(R.id.btn_makeTransWithdraw);
         amount = findViewById(R.id.et_amount);
 
-        accNo = "0001";
+        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
+        String instance_type = (String) getIntent().getSerializableExtra("i_type");
+
+        accNo = accountModel.getAccountNo();
         type = "Withdraw";
         date = "2022/07/05";
 
-        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
-        String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
 
         make_withdrawal.setOnClickListener(new View.OnClickListener() {

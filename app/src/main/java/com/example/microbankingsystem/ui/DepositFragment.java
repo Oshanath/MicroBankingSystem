@@ -47,12 +47,15 @@ public class DepositFragment extends AppCompatActivity {
         make_deposit = findViewById(R.id.btn_makeTransaction2);
         amount = findViewById(R.id.et_amount);
 
-        accNo = "000102034";
+        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
+        String instance_type = (String) getIntent().getSerializableExtra("i_type");
+
+        //accNo = "000102034";
+        accNo = accountModel.getAccountNo();
         type = "Deposit";
         date = "2022/06/18";
 
-        AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
-        String instance_type = (String) getIntent().getSerializableExtra("i_type");
+
 
         make_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
