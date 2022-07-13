@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
@@ -25,6 +26,7 @@ public class WithdrawFragment extends AppCompatActivity {
     String accNo,type;
     String date;
     EditText amount;
+    TextView viewAccNo;
 
     OkHttpClient client;
 
@@ -42,6 +44,9 @@ public class WithdrawFragment extends AppCompatActivity {
         accNo = accountModel.getAccountNo();
         type = "Withdraw";
         date = "2022/07/05";
+
+        viewAccNo = findViewById(R.id.textView4);
+        viewAccNo.setText(accNo);
 
         make_withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
