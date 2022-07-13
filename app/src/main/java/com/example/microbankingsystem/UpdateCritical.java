@@ -1,4 +1,4 @@
-package com.example.microbankingsystem.ui;
+package com.example.microbankingsystem;
 
 import android.os.AsyncTask;
 
@@ -28,8 +28,6 @@ public class UpdateCritical extends AsyncTask {
                 .add("type",transactionModel.getType())
                 .add("date", transactionModel.getDate())
                 .build();
-
-        System.out.println(formBody);
 
         String url = "http://10.0.2.2:8083/criticalTransaction";
 
