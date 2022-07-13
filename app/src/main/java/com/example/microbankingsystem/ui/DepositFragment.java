@@ -14,6 +14,7 @@ import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.DatabaseHelper;
 import com.example.microbankingsystem.R;
 import com.example.microbankingsystem.TransactionModel;
+import com.example.microbankingsystem.UpdateCritical;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.util.List;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -47,12 +47,13 @@ public class DepositFragment extends AppCompatActivity {
         make_deposit = findViewById(R.id.btn_makeTransaction2);
         amount = findViewById(R.id.et_amount);
 
-        accNo = "000102034";
-        type = "Deposit";
-        date = "2022/06/18";
-
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
+
+
+        accNo = accountModel.getAccountNo();
+        type = "Deposit";
+        date = "2022/07/05";
 
         make_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +71,7 @@ public class DepositFragment extends AppCompatActivity {
 
                     if(deposit_DBHelper.getLastID() >= 5){
 
-                        UpdateCloud updateCloud =new UpdateCloud();
+                        UpdateCloud updateCloud =new UpdateCloud(deposit_DBHelper.getAllTransactions());
                         updateCloud.execute();
 
                         deposit_DBHelper.clearTransactions();
@@ -98,52 +99,6 @@ public class DepositFragment extends AppCompatActivity {
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
         startActivity(intent);
-    }
-
-    public class UpdateCloud extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            client = new OkHttpClient();
-
-            List<TransactionModel> transactions = deposit_DBHelper.getAllTransactions();
-
-            FormBody.Builder formBody = new FormBody.Builder();
-
-            for ( TransactionModel t : transactions){
-
-                JSONObject jsonObject = new JSONObject();
-
-                try {
-                    jsonObject.put("accNo", t.getAccNo());
-                    jsonObject.put("amount", t.getAmount());
-                    jsonObject.put("type", t.getType());
-                    jsonObject.put("date", t.getDate());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println(formBody);
-                formBody.add("transcation" + t.getID(), jsonObject.toString());
-            }
-
-            String url = "http://10.0.2.2:8083/criticalVerify";
-
-            RequestBody body = formBody.build();
-
-            Request request = new Request.Builder().url(url).post(body).build();
-
-            Response response = null;
-
-            try {
-                response = client.newCall(request).execute();
-                System.out.println(response.body().string());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
     }
 
 }
