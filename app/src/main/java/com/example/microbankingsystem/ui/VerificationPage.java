@@ -66,7 +66,7 @@ public class VerificationPage extends AppCompatActivity {
         Bundle extras;
         extras = getIntent().getExtras();
         String transaction_type = extras.getString("i_type");
-        if (transaction_type.equals("n")){
+        if (transaction_type.equals("c")){
             btn_sync.setVisibility(View.INVISIBLE);
         }
 
