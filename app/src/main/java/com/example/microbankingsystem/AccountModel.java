@@ -6,9 +6,9 @@ public class AccountModel implements Serializable {
     private String accountNo;
     private double balance;
     private String type;
-    private int pin;
+    private byte[] pin;
 
-    public AccountModel(String accountNo, double balance, String type, int pin) {
+    public AccountModel(String accountNo, double balance, String type, byte[] pin) {
         this.accountNo = accountNo;
         this.balance = balance;
         this.type = type;
@@ -45,11 +45,11 @@ public class AccountModel implements Serializable {
         this.type = type;
     }
 
-    public int getPin() {
+    public byte[] getPin() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(byte[] pin) {
         this.pin = pin;
     }
 
