@@ -40,7 +40,7 @@ public class VerificationPage extends AppCompatActivity {
 
     Button btn_verification_check, btn_sync;
     EditText tv_nic, tv_acc, tv_pin;
-    String nic, acc_no, pin;
+    String nic = "", acc_no = "", pin = "";
     OkHttpClient client;
     String agentID, url;
     DatabaseHelper verify_databaseHelper;
@@ -59,7 +59,15 @@ public class VerificationPage extends AppCompatActivity {
 
         instance_type = getIntent().getExtras().getString("i_type");
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
-        verify_databaseHelper.addAccount(new AccountModel("101", 32.99, "adult", 999));
+
+        verify_databaseHelper.addAccount(new AccountModel("102", 20000.50, "adult", 999));
+
+        Bundle extras;
+        extras = getIntent().getExtras();
+        String transaction_type = extras.getString("i_type");
+        if (transaction_type.equals("c")){
+            btn_sync.setVisibility(View.INVISIBLE);
+        }
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,14 +88,18 @@ public class VerificationPage extends AppCompatActivity {
                     verify.execute();
 
                 }
-                else if (instance_type.equals("n")){
-                    boolean exist = checkLocalDB();
-                    if(exist){
-                        makeToast("Verified");
-                        openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
-                    }
-                    else{
-                        makeToast("Unverified");
+                else if (instance_type.equals("n")) {
+
+                    if (getEditTextValues()) {
+
+                        boolean exist = checkLocalDB();
+
+                        if (exist) {
+                            makeToast("Verified");
+                            openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
+                        } else {
+                            makeToast("Unverified");
+                        }
                     }
                 }
             }
@@ -138,26 +150,43 @@ public class VerificationPage extends AppCompatActivity {
         @Override
         protected String doInBackground(Object[] objects){
 
-            getEditTextValues();
+            if(getEditTextValues()){
 
-            url = "http://10.0.2.2:8083/criticalVerify";
+                url = "http://10.0.2.2:8083/criticalVerify";
 
-            RequestBody formBody = new FormBody.Builder()
-                    .add("nic", nic)
-                    .add("acc_no", acc_no)
-                    .add("pin", pin)
-                    .add("agentID", agentID)
-                    .build();
+                RequestBody formBody = new FormBody.Builder()
+                        .add("nic", nic)
+                        .add("acc_no", acc_no)
+                        .add("pin", pin)
+                        .add("agentID", agentID)
+                        .build();
 
-            Request request = new Request.Builder().url(url).post(formBody).build();
+                Request request = new Request.Builder().url(url).post(formBody).build();
 
-            Response response = null;
+                Response response = null;
 
-            try {
-                response = client.newCall(request).execute();
-                System.out.println(response.body().string());
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+
+                    response = client.newCall(request).execute();
+                    JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
+                    String success = jsonObject.getString("message");
+
+                    if( success.equals("success")){
+                        double balance = jsonObject.getDouble("balance");
+                        String type = jsonObject.getString("type");
+                        AccountModel critical_acc = new AccountModel(acc_no, balance, type);
+                        openOptionsFragment(critical_acc, "c");
+                    }
+                    else if ( success.equals("wrong pin")) {
+                        makeToast("Incorrect Pin");
+                    }
+                    else if ( success.equals("unregistered")){
+                        makeToast("Account not registered in critical service");
+                    }
+
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             //openOptionsFragment();
@@ -173,7 +202,7 @@ public class VerificationPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static String hash(String s) {
+    public static String hash(String s){
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -181,8 +210,8 @@ public class VerificationPage extends AppCompatActivity {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
 
-            for (int i = 0; i < hash.length; i++) {
-                stringBuilder.append((char) (hash[i] > 0 ? hash[i] : hash[i] + 256));
+            for(int i = 0; i < hash.length; i++){
+                stringBuilder.append((char)(hash[i] > 0 ? hash[i] : hash[i] + 256));
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -190,29 +219,35 @@ public class VerificationPage extends AppCompatActivity {
 
         return stringBuilder.toString();
     }
-
+    
     private void makeToast(String message){
-        Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
     }
 
     private boolean checkLocalDB() {
 
-        getEditTextValues();
-
         List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
 
-        if( existing_accounts.contains(acc_no)){
+        if (existing_accounts.contains(acc_no)) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
+
     }
 
-    private void getEditTextValues() {
+    private boolean getEditTextValues() {
         nic = String.valueOf(tv_nic.getText());
         acc_no = String.valueOf(tv_acc.getText());
         pin = String.valueOf(tv_pin.getText());
+
+        if ( nic.equals("") || acc_no.equals("") || pin.equals("")){
+            makeToast("Enter all details");
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     private void findByViews() {
@@ -222,5 +257,4 @@ public class VerificationPage extends AppCompatActivity {
         tv_nic = findViewById(R.id.txt_nic_num);
         tv_pin = findViewById(R.id.txt_pin);
     }
-
 }

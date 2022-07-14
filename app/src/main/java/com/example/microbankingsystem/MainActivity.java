@@ -1,15 +1,15 @@
 package com.example.microbankingsystem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.microbankingsystem.ui.OpeningWindow;
-import com.example.microbankingsystem.ui.OptionsFragment;
-import com.example.microbankingsystem.ui.VerificationPage;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btn_test;
 
-      @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -46,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        binding.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         // initializing of buttons
         btn_test = findViewById(R.id.button_test);
@@ -66,7 +66,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-      }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+        if(!previouslyStarted) {
+          SharedPreferences.Editor edit = prefs.edit();
+          edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+          edit.commit();
+          //function
+            AlarmHandler alarmHandler = new AlarmHandler(this);
+            alarmHandler.cancelAlarm(SyncService.class);
+            alarmHandler.setAlarm(SyncService.class);
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
