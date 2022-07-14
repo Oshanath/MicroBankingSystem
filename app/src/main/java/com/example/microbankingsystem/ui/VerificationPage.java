@@ -246,12 +246,6 @@ public class VerificationPage extends AppCompatActivity {
 
         List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
 
-        Iterator<String> it = existing_accounts.iterator();
-
-        while(it.hasNext()){
-            System.out.println(it.next());
-        }
-
         if (existing_accounts.contains(acc_no)) {
             return true;
         } else {
