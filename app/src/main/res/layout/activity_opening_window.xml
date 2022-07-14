@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background2"
+
+    android:background="@color/dark_gray_background"
     tools:context=".ui.OpeningWindow">
 
     <Button
@@ -14,10 +15,11 @@
         android:layout_marginTop="208dp"
         android:text="Normal"
         android:textSize="40sp"
+        android:background="@color/light_gray_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/btn_transaction_critical"
@@ -26,6 +28,7 @@
         android:layout_marginTop="50dp"
         android:text="@string/btn_transaction_select_critical"
         android:textSize="40sp"
+        android:backgroundTint="@color/light_gray_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"

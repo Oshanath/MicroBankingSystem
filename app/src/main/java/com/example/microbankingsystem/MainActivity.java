@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.microbankingsystem.ui.OpeningWindow;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,8 +21,8 @@ import com.example.microbankingsystem.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-
-import okhttp3.OkHttpClient;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     Button btn_test;
+    EditText tv_usr_name;
+    EditText tv_password;
+
+//    String usrName = "", password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,30 +49,21 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        // initializing of buttons
-        btn_test = findViewById(R.id.button_test);
+//        binding.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
 
-        // calling setOnClickListner on initialized buttons
-        btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                testact();
-            }
-        });
-
+        // Setting the system alarm to sync at 3.00pm daily
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+        SharedPreferences.Editor edit = prefs.edit();
         if(!previouslyStarted) {
-          SharedPreferences.Editor edit = prefs.edit();
+//          SharedPreferences.Editor edit = prefs.edit();
           edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
           edit.commit();
           //function
@@ -78,7 +72,40 @@ public class MainActivity extends AppCompatActivity {
             alarmHandler.setAlarm(SyncService.class);
         }
 
+        // setting the login page to show up only in the first app launch.
+        boolean previouslySignedIn = prefs.getBoolean(getString(R.string.pref_previously_signed_in), false);
+        if(previouslySignedIn){
+            openOpeningWindow();
+        }
+
+        // initializing of buttons
+        btn_test = findViewById(R.id.button_test);
+        tv_usr_name = findViewById(R.id.tv_usr_name);
+        tv_password = findViewById(R.id.tv_pw);
+
+
+        // calling setOnClickListner on initialized buttons
+        btn_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String usrName = tv_usr_name.getText().toString();
+                String password = tv_password.getText().toString();
+
+                if (logInWith(usrName, password)){
+//                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putBoolean(getString(R.string.pref_previously_signed_in), Boolean.TRUE);
+                    edit.commit();
+                    Toast.makeText(MainActivity.this, "Successfully logged", Toast.LENGTH_SHORT).show();
+                    openOpeningWindow();
+                }else{
+                    Toast.makeText(MainActivity.this, "Login credentials are incorrect", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +136,17 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void testact(){
+    public boolean logInWith(String userName, String password){
+        //do the validation here
+        if(userName.equals("aa") && password.equals("aa")){
+            return true;
+        }else{
+            return false;
+        }
+//        return true;
+    }
+
+    public void openOpeningWindow(){
         Intent test = new Intent(this, OpeningWindow.class);
         startActivity(test);
     }
