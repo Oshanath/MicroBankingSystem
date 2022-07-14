@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -60,7 +61,7 @@ public class VerificationPage extends AppCompatActivity {
         instance_type = getIntent().getExtras().getString("i_type");
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
 
-        verify_databaseHelper.addAccount(new AccountModel("102", 20000.50, "adult", 999));
+        verify_databaseHelper.addAccount(new AccountModel("102", 20000.50, "adult", hash("999")));
 
         Bundle extras;
         extras = getIntent().getExtras();
@@ -131,9 +132,14 @@ public class VerificationPage extends AppCompatActivity {
                     if ( !existing_accounts.contains(account_number)){
                         double balance = jsonArray.getJSONObject(i).getDouble("balance");
                         String acc_type = jsonArray.getJSONObject(i).getString("type");
-                        int pin = jsonArray.getJSONObject(i).getInt("pin");
+                        JSONArray hashJson = jsonArray.getJSONObject(i).getJSONArray("pin");
 
-                        verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, pin));
+                        byte[] hash = new byte[hashJson.length()];
+                        for(int j = 0; j < hashJson.length(); j++){
+                            hash[i] = (byte)(hashJson.getInt(j));
+                        }
+
+                        verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, hash));
                     }
                 }
 
@@ -202,22 +208,34 @@ public class VerificationPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static String hash(String s){
+    public static byte[] hash(String s){
 
-        StringBuilder stringBuilder = new StringBuilder();
+        byte[] hash = {};
 
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
+            hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
 
-            for(int i = 0; i < hash.length; i++){
-                stringBuilder.append((char)(hash[i] > 0 ? hash[i] : hash[i] + 256));
-            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString();
+        return hash;
+    }
+
+    public static boolean compareHash(byte[] hash1, byte[] hash2){
+
+        boolean equals = true;
+
+        for(int i = 0; i < hash1.length; i++){
+            if(hash1[i] != hash2[i]){
+                equals = false;
+                break;
+            }
+        }
+
+        return equals;
+
     }
     
     private void makeToast(String message){
@@ -227,6 +245,12 @@ public class VerificationPage extends AppCompatActivity {
     private boolean checkLocalDB() {
 
         List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+
+        Iterator<String> it = existing_accounts.iterator();
+
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
 
         if (existing_accounts.contains(acc_no)) {
             return true;

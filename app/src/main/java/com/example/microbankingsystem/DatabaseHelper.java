@@ -183,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if(cursor.getString(0).equals(acc_no)) {
                     Double balance = cursor.getDouble(1);
                     String acc_type = cursor.getString(2);
-                    int pin = cursor.getInt(3);
+                    byte[] pin = cursor.getBlob(3);
                     accountModel = new AccountModel(acc_no, balance, acc_type, pin);
                     break;
                 }
