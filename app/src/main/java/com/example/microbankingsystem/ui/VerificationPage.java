@@ -3,6 +3,7 @@ package com.example.microbankingsystem.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +21,11 @@ import org.json.*;
 
 
 import java.io.IOException;
+import java.net.SocketOption;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLOutput;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -89,7 +92,7 @@ public class VerificationPage extends AppCompatActivity {
 
                     if (getEditTextValues()) {
 
-                        boolean exist = checkLocalDB();
+                        boolean exist = checkLocalDB(acc_no, pin);
 
                         if (exist) {
                             makeToast("Verified");
@@ -238,15 +241,63 @@ public class VerificationPage extends AppCompatActivity {
         runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
     }
 
-    private boolean checkLocalDB() {
+    private boolean checkLocalDB(String acc_no, String pin) {
+//            List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+//
+//            if (existing_accounts.contains(acc_no)) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+        System.out.println("=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=");
+        System.out.println("given:"+acc_no+"|"+pin);
+        System.out.println("========================");
 
-        List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        Cursor cursor = databaseHelper.readAccNoAndPin(acc_no);
 
-        if (existing_accounts.contains(acc_no)) {
-            return true;
-        } else {
+        if (cursor.moveToFirst()){
+            do{
+                String acc = cursor.getString(0);
+                byte byte_pin[] = cursor.getBlob(1);
+                System.out.println(acc);
+                System.out.println("++++++++++++==================+++++++++++++++");
+            }while(cursor.moveToNext());
+        }
+
+//        System.out.println(cursor.getString(0));
+//        System.out.println(accPin);
+
+        if (cursor == null){
+            Toast.makeText(this, "Unverified", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            databaseHelper.close();
             return false;
         }
+//        else{
+//            cursor.moveToFirst();
+//            byte accPinByteArray[] = cursor.getBlob(1);
+//            String tempAccPin = new String(accPinByteArray, StandardCharsets.UTF_8);
+//            String accPin = tempAccPin.substring(0,tempAccPin.length()-1);
+//
+//            if(acc_no.equals(cursor.getString(0))  && pin.equals(accPin)){
+//                Toast.makeText(this, "Verified", Toast.LENGTH_SHORT).show();
+////                =======
+//                System.out.println(cursor.getString(0));
+//                System.out.println(accPin);
+////                =======
+//                cursor.close();
+//                databaseHelper.close();
+//                return true;
+//            }else{
+//                Toast.makeText(this, "Unverified", Toast.LENGTH_SHORT).show();
+//                cursor.close();
+//                databaseHelper.close();
+//                return false;
+//            }
+//        }
+
+        return true;
 
     }
 
