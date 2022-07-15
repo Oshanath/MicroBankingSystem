@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -51,11 +53,10 @@ public class DepositFragment extends AppCompatActivity {
 
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
-
+        String agentID = (String) getIntent().getSerializableExtra("agentID");
 
         accNo = accountModel.getAccountNo();
         type = "Deposit";
-        date = "2022/07/05";
 
         viewAccNo = findViewById(R.id.textView4);
         viewAccNo.setText(accNo);
@@ -64,6 +65,8 @@ public class DepositFragment extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                date = sdf.format(new Date());
                 TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
 
                 if(instance_type.equals("n")) {
@@ -76,7 +79,7 @@ public class DepositFragment extends AppCompatActivity {
 
                     if(deposit_DBHelper.getLastID() >= 2){
 
-                        UpdateCloud updateCloud =new UpdateCloud(deposit_DBHelper.getAllTransactions());
+                        UpdateCloud updateCloud =new UpdateCloud(deposit_DBHelper.getAllTransactions(), agentID);
                         updateCloud.execute();
 
                         deposit_DBHelper.clearTransactions();
@@ -89,7 +92,7 @@ public class DepositFragment extends AppCompatActivity {
                 }
                 else{
 
-                        UpdateCritical updateCritical = new UpdateCritical(transactionModel);
+                        UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
                         updateCritical.execute();
 
                 }

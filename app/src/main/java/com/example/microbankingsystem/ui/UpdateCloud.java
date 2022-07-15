@@ -19,9 +19,11 @@ import okhttp3.Response;
 public class UpdateCloud extends AsyncTask {
 
     private List<TransactionModel> transactionModels;
+    private String agentID;
 
-    public UpdateCloud(List<TransactionModel> transactionModels) {
+    public UpdateCloud(List<TransactionModel> transactionModels, String agentID) {
         this.transactionModels = transactionModels;
+        this.agentID = agentID;
     }
 
     @Override
@@ -29,6 +31,7 @@ public class UpdateCloud extends AsyncTask {
         OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder formBody = new FormBody.Builder();
+        formBody.add("agentID", agentID);
 
         for ( TransactionModel t : transactionModels){
 
