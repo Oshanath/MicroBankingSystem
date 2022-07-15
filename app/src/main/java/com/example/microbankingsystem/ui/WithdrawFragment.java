@@ -66,7 +66,7 @@ public class WithdrawFragment extends AppCompatActivity {
                         boolean success = withdrawDBHelper.record_transaction(transactionModel);
                         Toast.makeText(WithdrawFragment.this, ""+success, Toast.LENGTH_SHORT).show();
 
-                        if(withdrawDBHelper.getLastID() >= 5){
+                        if(withdrawDBHelper.getLastID() >= 2){
 
                             UpdateCloud updateCloud =new UpdateCloud(withdrawDBHelper.getAllTransactions());
                             updateCloud.execute();

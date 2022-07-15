@@ -44,7 +44,7 @@ public class UpdateCloud extends AsyncTask {
             }
 
             System.out.println(formBody);
-            formBody.add("transcation" + t.getID(), jsonObject.toString());
+            formBody.add(Integer.toString(t.getID()), jsonObject.toString());
         }
 
         //String url = "http://10.0.2.2:8083/criticalVerify";
