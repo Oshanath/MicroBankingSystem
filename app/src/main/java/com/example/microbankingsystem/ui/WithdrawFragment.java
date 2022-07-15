@@ -40,6 +40,7 @@ public class WithdrawFragment extends AppCompatActivity {
 
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
+        String agentID = (String) getIntent().getSerializableExtra("agentID");
 
         accNo = accountModel.getAccountNo();
         type = "Withdraw";
@@ -68,7 +69,7 @@ public class WithdrawFragment extends AppCompatActivity {
 
                         if(withdrawDBHelper.getLastID() >= 2){
 
-                            UpdateCloud updateCloud =new UpdateCloud(withdrawDBHelper.getAllTransactions());
+                            UpdateCloud updateCloud =new UpdateCloud(withdrawDBHelper.getAllTransactions(), agentID);
                             updateCloud.execute();
 
                             withdrawDBHelper.clearTransactions();
@@ -84,7 +85,7 @@ public class WithdrawFragment extends AppCompatActivity {
                     }
                 }
                 else{
-                    UpdateCritical updateCritical = new UpdateCritical(transactionModel);
+                    UpdateCritical updateCritical = new UpdateCritical(transactionModel,agentID);
                     updateCritical.execute();
                 }
             }

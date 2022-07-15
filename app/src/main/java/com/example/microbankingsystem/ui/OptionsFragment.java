@@ -27,18 +27,19 @@ public class OptionsFragment extends AppCompatActivity {
 
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
+        String agentID = (String) getIntent().getSerializableExtra("agentID");
 
         btn_cashDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDepositWindow(accountModel, instance_type);
+                openDepositWindow(accountModel, instance_type, agentID);
             }
         });
 
         btn_cashWithdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWithdrawalWindow(accountModel, instance_type);
+                openWithdrawalWindow(accountModel, instance_type, agentID);
             }
         });
 
@@ -49,17 +50,19 @@ public class OptionsFragment extends AppCompatActivity {
 
     }
 
-    public void openDepositWindow(AccountModel accountModel, String instance_type){
+    public void openDepositWindow(AccountModel accountModel, String instance_type, String agentID){
         Intent depositIntent = new Intent(this, DepositFragment.class);
         depositIntent.putExtra("Account", accountModel);
         depositIntent.putExtra("i_type", instance_type);
+        depositIntent.putExtra("agentID", agentID );
         startActivity(depositIntent);
     }
 
-    public void openWithdrawalWindow(AccountModel accountModel, String instance_type){
+    public void openWithdrawalWindow(AccountModel accountModel, String instance_type, String agentID){
         Intent withdrawIntent = new Intent(this, WithdrawFragment.class);
         withdrawIntent.putExtra("Account", accountModel);
         withdrawIntent.putExtra("i_type", instance_type);
+        withdrawIntent.putExtra("agentID", agentID);
         startActivity(withdrawIntent);
     }
 

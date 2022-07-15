@@ -14,15 +14,18 @@ import okhttp3.RequestBody;
 public class UpdateCritical extends AsyncTask {
 
     private TransactionModel transactionModel;
+    private String agentID;
 
-    public UpdateCritical(TransactionModel transactionModel) {
+    public UpdateCritical(TransactionModel transactionModel, String agentID) {
         this.transactionModel = transactionModel;
+        this.agentID = agentID;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
 
         RequestBody formBody = new FormBody.Builder()
+                .add("agentID", this.agentID)
                 .add("acc_no", transactionModel.getAccNo())
                 .add("amount", String.valueOf(transactionModel.getAmount()))
                 .add("type",transactionModel.getType())
@@ -30,6 +33,7 @@ public class UpdateCritical extends AsyncTask {
                 .build();
 
         String url = "http://10.0.2.2:8083/criticalTransaction";
+        System.out.println(formBody);
 
         OkHttpClient client = new OkHttpClient();
 
