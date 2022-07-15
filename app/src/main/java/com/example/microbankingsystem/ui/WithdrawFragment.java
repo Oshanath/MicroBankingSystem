@@ -16,6 +16,9 @@ import com.example.microbankingsystem.R;
 import com.example.microbankingsystem.TransactionModel;
 import com.example.microbankingsystem.UpdateCritical;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import okhttp3.OkHttpClient;
 
 
@@ -44,7 +47,6 @@ public class WithdrawFragment extends AppCompatActivity {
 
         accNo = accountModel.getAccountNo();
         type = "Withdraw";
-        date = "2022/07/05";
 
         viewAccNo = findViewById(R.id.textView4);
         viewAccNo.setText(accNo);
@@ -54,8 +56,9 @@ public class WithdrawFragment extends AppCompatActivity {
             public void onClick(View v) {
 
                 Double requested_amount = Double.parseDouble(amount.getText().toString());
-                System.out.println(requested_amount);
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                date = sdf.format(new Date());
                 TransactionModel transactionModel = new TransactionModel(1, accNo, requested_amount, type, date);
 
                 if(instance_type.equals("n")) {
@@ -77,7 +80,7 @@ public class WithdrawFragment extends AppCompatActivity {
                         }
 
                         if (success) {
-                            openOptionsFragment(accountModel, instance_type);
+                            openOptionsFragment(accountModel, instance_type, agentID);
                         }
                     }
                     else{
@@ -92,10 +95,11 @@ public class WithdrawFragment extends AppCompatActivity {
         });
     }
 
-    private void openOptionsFragment(AccountModel accountModel, String instance_type){
+    private void openOptionsFragment(AccountModel accountModel, String instance_type, String agentID){
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
+        intent.putExtra("agentID",agentID);
         startActivity(intent);
     }
 }

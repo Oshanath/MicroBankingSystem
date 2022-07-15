@@ -71,7 +71,6 @@ public class DepositFragment extends AppCompatActivity {
 
                 if(instance_type.equals("n")) {
 
-
                     deposit_DBHelper = new DatabaseHelper(DepositFragment.this);
 
                     boolean success = deposit_DBHelper.record_transaction(transactionModel);
@@ -87,7 +86,7 @@ public class DepositFragment extends AppCompatActivity {
                     }
 
                     if (success) {
-                        openOptionsFragment(accountModel, instance_type);
+                        openOptionsFragment(accountModel, instance_type, agentID);
                     }
                 }
                 else{
@@ -102,10 +101,11 @@ public class DepositFragment extends AppCompatActivity {
     }
 
 
-    private void openOptionsFragment(AccountModel accountModel, String instance_type){
+    private void openOptionsFragment(AccountModel accountModel, String instance_type, String agentID){
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
+        intent.putExtra("agentID",agentID);
         startActivity(intent);
     }
 
