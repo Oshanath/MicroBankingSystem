@@ -18,6 +18,7 @@ import com.example.microbankingsystem.UpdateCritical;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
 
@@ -88,8 +89,22 @@ public class WithdrawFragment extends AppCompatActivity {
                     }
                 }
                 else{
-                    UpdateCritical updateCritical = new UpdateCritical(transactionModel,agentID);
-                    updateCritical.execute();
+                    String success="";
+                    UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
+                    try {
+                        success = (String) updateCritical.execute().get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (success.equals("success")) {
+                        openOptionsFragment(accountModel, instance_type, agentID);
+                    }
+                    else{
+                        Toast.makeText(WithdrawFragment.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
