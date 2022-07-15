@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.microbankingsystem.databinding.ActivityMainBinding;
+import com.example.microbankingsystem.ui.VerificationPage;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -178,12 +179,10 @@ public class MainActivity extends AppCompatActivity {
                     openOpeningWindow(agentID);
                 }
                 else if ( success.equals("user not found")) {
-                    System.out.println("User not found");
-//                    Toast.makeText(MainActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                    makeToast("User not found");
                 }
                 else if ( success.equals("password mismatch")){
-//                    Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
-                    System.out.println("wrong password");
+                    makeToast("Wrong password");
                 }
 
             } catch (IOException | JSONException e) {
@@ -191,6 +190,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    private void makeToast(String message){
+        runOnUiThread(() -> Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show());
     }
 
 }
