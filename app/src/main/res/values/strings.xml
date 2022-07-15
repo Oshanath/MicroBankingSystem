@@ -25,4 +25,6 @@
     <string name="btn_transaction_select_critical">Critical</string>
     <string name="pref_previously_started">previouslyStarted</string>
     <string name="pref_previously_signed_in">preciouslySignedIn</string>
+    <string name="shared_preference">sharedPreferences</string>
+    <string name="agent_id">agentId</string>
 </resources>
