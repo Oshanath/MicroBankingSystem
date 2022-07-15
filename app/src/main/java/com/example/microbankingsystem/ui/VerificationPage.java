@@ -241,64 +241,23 @@ public class VerificationPage extends AppCompatActivity {
         runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
     }
 
-    private boolean checkLocalDB(String acc_no, String pin) {
-//            List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
-//
-//            if (existing_accounts.contains(acc_no)) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-        System.out.println("=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=");
-        System.out.println("given:"+acc_no+"|"+pin);
-        System.out.println("========================");
-
+    private boolean checkLocalDB(String enteredAccNo, String enteredPin) {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        Cursor cursor = databaseHelper.readAccNoAndPin(acc_no);
+        Cursor cursor = databaseHelper.readAccNoAndPin(enteredAccNo);
 
         if (cursor.moveToFirst()){
-            do{
-                String acc = cursor.getString(0);
-                byte byte_pin[] = cursor.getBlob(1);
-                System.out.println(acc);
-                System.out.println("++++++++++++==================+++++++++++++++");
-            }while(cursor.moveToNext());
-        }
-
-//        System.out.println(cursor.getString(0));
-//        System.out.println(accPin);
-
-        if (cursor == null){
-            Toast.makeText(this, "Unverified", Toast.LENGTH_SHORT).show();
-            cursor.close();
-            databaseHelper.close();
+            String acc = cursor.getString(0);
+            byte byte_pin[] = cursor.getBlob(1);
+            byte pinArray[] = hash(enteredPin);
+            boolean pinCheck = compareHash(pinArray, byte_pin);
+            if (enteredAccNo.equals(acc) && pinCheck){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
             return false;
         }
-//        else{
-//            cursor.moveToFirst();
-//            byte accPinByteArray[] = cursor.getBlob(1);
-//            String tempAccPin = new String(accPinByteArray, StandardCharsets.UTF_8);
-//            String accPin = tempAccPin.substring(0,tempAccPin.length()-1);
-//
-//            if(acc_no.equals(cursor.getString(0))  && pin.equals(accPin)){
-//                Toast.makeText(this, "Verified", Toast.LENGTH_SHORT).show();
-////                =======
-//                System.out.println(cursor.getString(0));
-//                System.out.println(accPin);
-////                =======
-//                cursor.close();
-//                databaseHelper.close();
-//                return true;
-//            }else{
-//                Toast.makeText(this, "Unverified", Toast.LENGTH_SHORT).show();
-//                cursor.close();
-//                databaseHelper.close();
-//                return false;
-//            }
-//        }
-
-        return true;
-
     }
 
     private boolean getEditTextValues() {
