@@ -69,6 +69,7 @@
         android:textColorHint="@color/light_gray_hintText"
         android:textColor="@color/white"
         android:inputType="number"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
