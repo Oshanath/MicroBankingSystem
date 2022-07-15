@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " INTEGER NOT NULL)";
+        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " BLOB NOT NULL)";
         sqLiteDatabase.execSQL(createAccountTable);
         sqLiteDatabase.execSQL(createTransactionTable);
     }
@@ -47,14 +47,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean record_transaction(TransactionModel transactionModel){
 
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues cv = new ContentValues();
+        ContentValues cv_t = new ContentValues();
 
-        cv.put(COLUMN_ACC_NO, transactionModel.getAccNo());
-        cv.put(COLUMN_AMOUNT, transactionModel.getAmount());
-        cv.put(COLUMN_TYPE, transactionModel.getType());
-        cv.put(COLUMN_TRANS_DATE, transactionModel.getDate().toString());
+        cv_t.put(COLUMN_ACC_NO, transactionModel.getAccNo());
+        cv_t.put(COLUMN_AMOUNT, transactionModel.getAmount());
+        cv_t.put(COLUMN_TYPE, transactionModel.getType());
+        cv_t.put(COLUMN_TRANS_DATE, transactionModel.getDate().toString());
 
-        long insert = db.insert(TRANSACTIONS, null, cv);
+        AccountModel accountModel = getAccount(transactionModel.getAccNo());
+
+
+        Double new_balance = Double.valueOf(0);
+        if(transactionModel.getType().equals("Deposit")){
+            new_balance = accountModel.getBalance() + transactionModel.getAmount();
+        }
+        else if ( transactionModel.getType().equals("Withdraw")){
+            new_balance = accountModel.getBalance() - transactionModel.getAmount();
+        }
+
+        String updateQuery = "UPDATE "+ACCOUNTS+" SET "+COLUMN_BALANCE+" = "+new_balance+" WHERE "+COLUMN_ACCOUNT_NO+" = "+transactionModel.getAccNo();
+        db.execSQL(updateQuery);
+
+        long insert = db.insert(TRANSACTIONS, null, cv_t);
+
         if(insert==-1){
             return false;
         }
@@ -95,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int lastID = 0;
 
-        Cursor cursor = readAllFromTable(ACCOUNTS);
+        Cursor cursor = readAllFromTable(TRANSACTIONS);
 
         if(cursor.moveToLast()){
             lastID = cursor.getInt(0);
@@ -111,8 +126,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String truncateTable = "DELETE FROM " + ACCOUNTS ;
-
+        String truncateTable = "DELETE FROM " + TRANSACTIONS ;
+        String resetKey = "UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'TRANSACTIONS'";
+        db.execSQL(resetKey);
         db.execSQL(truncateTable);
     }
 
@@ -167,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if(cursor.getString(0).equals(acc_no)) {
                     Double balance = cursor.getDouble(1);
                     String acc_type = cursor.getString(2);
-                    int pin = cursor.getInt(3);
+                    byte[] pin = cursor.getBlob(3);
                     accountModel = new AccountModel(acc_no, balance, acc_type, pin);
                     break;
                 }
@@ -181,7 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Double getAccountBalance(String acc_no){
 
-        Double balance = null;
+        Double balance = Double.valueOf(0);
         Cursor cursor = readAllFromTable(ACCOUNTS);
 
         if (cursor.moveToFirst()){

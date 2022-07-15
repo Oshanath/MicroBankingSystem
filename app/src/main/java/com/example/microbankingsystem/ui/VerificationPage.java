@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
@@ -25,16 +23,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.Buffer;
 
 public class VerificationPage extends AppCompatActivity {
 
@@ -58,16 +53,17 @@ public class VerificationPage extends AppCompatActivity {
         agentID = "190488J";
 
         instance_type = getIntent().getExtras().getString("i_type");
-
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
 
-        verify_databaseHelper.addAccount(new AccountModel("102", 32000.99, "adult", 999));
+        verify_databaseHelper.addAccount(new AccountModel("102", 20000.50, "adult", hash("999")));
 
         Bundle extras;
         extras = getIntent().getExtras();
         String transaction_type = extras.getString("i_type");
         if (transaction_type.equals("c")){
             btn_sync.setVisibility(View.INVISIBLE);
+        } else if (transaction_type.equals("n")){
+            tv_nic.setVisibility(View.INVISIBLE);
         }
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
@@ -132,9 +128,14 @@ public class VerificationPage extends AppCompatActivity {
                     if ( !existing_accounts.contains(account_number)){
                         double balance = jsonArray.getJSONObject(i).getDouble("balance");
                         String acc_type = jsonArray.getJSONObject(i).getString("type");
-                        int pin = jsonArray.getJSONObject(i).getInt("pin");
+                        JSONArray hashJson = jsonArray.getJSONObject(i).getJSONArray("pin");
 
-                        verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, pin));
+                        byte[] hash = new byte[hashJson.length()];
+                        for(int j = 0; j < hashJson.length(); j++){
+                            hash[i] = (byte)(hashJson.getInt(j));
+                        }
+
+                        verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, hash));
                     }
                 }
 
@@ -203,37 +204,49 @@ public class VerificationPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static String hash(String s){
+    public static byte[] hash(String s){
 
-        StringBuilder stringBuilder = new StringBuilder();
+        byte[] hash = {};
 
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
+            hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
 
-            for(int i = 0; i < hash.length; i++){
-                stringBuilder.append((char)(hash[i] > 0 ? hash[i] : hash[i] + 256));
-            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString();
+        return hash;
+    }
+
+    public static boolean compareHash(byte[] hash1, byte[] hash2){
+
+        boolean equals = true;
+
+        for(int i = 0; i < hash1.length; i++){
+            if(hash1[i] != hash2[i]){
+                equals = false;
+                break;
+            }
+        }
+
+        return equals;
+
     }
     
-        private void makeToast(String message){
-            runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
+    private void makeToast(String message){
+        runOnUiThread(() -> Toast.makeText(VerificationPage.this, message, Toast.LENGTH_SHORT).show());
     }
 
     private boolean checkLocalDB() {
 
-            List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
+        List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
 
-            if (existing_accounts.contains(acc_no)) {
-                return true;
-            } else {
-                return false;
-            }
+        if (existing_accounts.contains(acc_no)) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -242,7 +255,7 @@ public class VerificationPage extends AppCompatActivity {
         acc_no = String.valueOf(tv_acc.getText());
         pin = String.valueOf(tv_pin.getText());
 
-        if ( nic.equals("") || acc_no.equals("") || pin.equals("")){
+        if ( acc_no.equals("") || pin.equals("")){
             makeToast("Enter all details");
             return false;
         }
@@ -254,8 +267,8 @@ public class VerificationPage extends AppCompatActivity {
     private void findByViews() {
         btn_verification_check = findViewById(R.id.btn_verification_check);
         btn_sync = findViewById(R.id.btn_sync);
-        tv_acc = findViewById(R.id.txt_acc_no);
-        tv_nic = findViewById(R.id.txt_nic_num);
+        tv_acc = findViewById(R.id.tv_pw);
+        tv_nic = findViewById(R.id.tv_usr_name);
         tv_pin = findViewById(R.id.txt_pin);
     }
 }
