@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.DatabaseHelper;
 import com.example.microbankingsystem.R;
+import com.example.microbankingsystem.Sync;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +74,7 @@ public class VerificationPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Sync sync = new Sync();
+                Sync sync = new Sync(agentID, verify_databaseHelper);
                 sync.execute();
 
             }
@@ -105,50 +106,6 @@ public class VerificationPage extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    public class Sync extends AsyncTask {
-
-        @Override
-        protected String doInBackground(Object[] objects) {
-
-            url = "http://10.0.2.2:8083/syncAgent/" + agentID;
-            Request request = new Request.Builder().url(url).build();
-
-            List<String> existing_accounts = verify_databaseHelper.getAllAccounts();
-
-            okhttp3.Response response = null;
-
-            try {
-                response = client.newCall(request).execute();
-                String response_json = response.body().string();
-
-                JSONArray jsonArray = new JSONArray(response_json);
-
-                for(int i=0; i<jsonArray.length(); i++){
-                    String account_number = jsonArray.getJSONObject(i).getString("number");
-
-                    if ( !existing_accounts.contains(account_number)){
-                        double balance = jsonArray.getJSONObject(i).getDouble("balance");
-                        String acc_type = jsonArray.getJSONObject(i).getString("type");
-                        JSONArray hashJson = jsonArray.getJSONObject(i).getJSONArray("pin");
-
-                        byte[] hash = new byte[hashJson.length()];
-                        for(int j = 0; j < hashJson.length(); j++){
-                            hash[j] = (byte)(hashJson.getInt(j));
-                        }
-
-                        verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, hash));
-                    }
-                }
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
     }
 
     public class Verify extends AsyncTask{
