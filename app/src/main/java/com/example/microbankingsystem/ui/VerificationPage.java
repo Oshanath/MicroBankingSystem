@@ -3,9 +3,11 @@ package com.example.microbankingsystem.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -162,7 +164,12 @@ public class VerificationPage extends AppCompatActivity {
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
-        intent.putExtra("agentID", agentID);
+
+        Intent newIntent = new Intent("agentID.string");
+        newIntent.putExtra("agentID", agentID);
+        sendBroadcast(newIntent);
+
+
         startActivity(intent);
     }
 

@@ -1,8 +1,13 @@
 package com.example.microbankingsystem;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.example.microbankingsystem.TransactionModel;
+import com.example.microbankingsystem.ui.OptionsFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -42,10 +47,13 @@ public class UpdateCritical extends AsyncTask {
 
         try {
             response = client.newCall(request).execute();
-            System.out.println(response.body().string());
-        } catch (IOException e) {
+            JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
+            return jsonObject.getString("message");
+
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
+
 }

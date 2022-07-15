@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
             RequestBody formBody = new FormBody.Builder()
                     .add("agentID", username)
-                    .add("acc_no", password)
+                    .add("password", password)
                     .build();
 
             Request request = new Request.Builder().url(url).post(formBody).build();
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                 response = client.newCall(request).execute();
                 JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
-                String success = jsonObject.getString("message");
+                String success = jsonObject.getString("result");
 
                 if( success.equals("success")){
                     SharedPreferences.Editor edit = prefs.edit();
@@ -178,10 +178,12 @@ public class MainActivity extends AppCompatActivity {
                     openOpeningWindow(agentID);
                 }
                 else if ( success.equals("user not found")) {
-                    Toast.makeText(MainActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                    System.out.println("User not found");
+//                    Toast.makeText(MainActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                 }
                 else if ( success.equals("password mismatch")){
-                    Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                    System.out.println("wrong password");
                 }
 
             } catch (IOException | JSONException e) {

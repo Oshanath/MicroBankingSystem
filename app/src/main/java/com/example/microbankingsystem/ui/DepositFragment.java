@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -91,9 +92,22 @@ public class DepositFragment extends AppCompatActivity {
                 }
                 else{
 
-                        UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
-                        updateCritical.execute();
+                    String success="";
+                    UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
+                    try {
+                        success = (String) updateCritical.execute().get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
+                    if (success.equals("success")) {
+                        openOptionsFragment(accountModel, instance_type, agentID);
+                    }
+                    else{
+                        Toast.makeText(DepositFragment.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
