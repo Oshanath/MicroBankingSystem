@@ -19,7 +19,7 @@ public class AlarmHandler {
     public void setAlarm(Class _class){
         Intent intent = new Intent(context, _class);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 2, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         if (alarmManager != null){
             Calendar calendar = Calendar.getInstance();

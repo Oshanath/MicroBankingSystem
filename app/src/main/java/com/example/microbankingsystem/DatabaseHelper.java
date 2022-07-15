@@ -2,6 +2,7 @@ package com.example.microbankingsystem;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
@@ -212,6 +213,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return balance;
+    }
+
+    public Cursor readAccNoAndPin(String AccNo){
+        String queryStatement = "select "+ COLUMN_ACCOUNT_NO+ ","+ COLUMN_PIN+ " from " + ACCOUNTS+ " where " + COLUMN_ACCOUNT_NO + "=\"" + AccNo + "\"";
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(queryStatement, null);
+        return cursor;
     }
 
     private Cursor readAllFromTable(String dbName){

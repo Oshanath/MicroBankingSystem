@@ -56,6 +56,21 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+//<<<<<<< HEAD
+//
+//        // initializing of buttons
+//        btn_test = findViewById(R.id.button_test);
+//
+//
+//        // calling setOnClickListner on initialized buttons
+//        btn_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                testact();
+//            }
+//        });
+//=======
+//>>>>>>> 31af53fee54dcf8017ff56b87b5e3785ae6f7ede
 
 
         // Setting the system alarm to sync at 3.00pm daily
@@ -68,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
           edit.commit();
           //function
             AlarmHandler alarmHandler = new AlarmHandler(this);
-            alarmHandler.cancelAlarm(SyncService.class);
+//            alarmHandler.cancelAlarm(SyncService.class);
             alarmHandler.setAlarm(SyncService.class);
         }
 
@@ -92,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 String password = tv_password.getText().toString();
 
                 if (logInWith(usrName, password)){
-//                    SharedPreferences.Editor edit = prefs.edit();
                     edit.putBoolean(getString(R.string.pref_previously_signed_in), Boolean.TRUE);
                     edit.commit();
                     Toast.makeText(MainActivity.this, "Successfully logged", Toast.LENGTH_SHORT).show();
