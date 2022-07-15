@@ -31,7 +31,7 @@ public class UpdateCloud extends AsyncTask {
         OkHttpClient client = new OkHttpClient();
 
         FormBody.Builder formBody = new FormBody.Builder();
-        formBody.add("agentID", agentID);
+        //formBody.add("agentID", agentID);
 
         for ( TransactionModel t : transactionModels){
 
@@ -42,6 +42,8 @@ public class UpdateCloud extends AsyncTask {
                 jsonObject.put("amount", t.getAmount());
                 jsonObject.put("type", t.getType());
                 jsonObject.put("date", t.getDate());
+                jsonObject.put("agentID", agentID);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

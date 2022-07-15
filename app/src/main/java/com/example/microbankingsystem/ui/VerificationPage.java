@@ -164,10 +164,12 @@ public class VerificationPage extends AppCompatActivity {
         Intent intent = new Intent(this, OptionsFragment.class);
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
+        intent.putExtra("agentID", agentID);
 
         Intent newIntent = new Intent("agentID.string");
         newIntent.putExtra("agentID", agentID);
         sendBroadcast(newIntent);
+
 
 
         startActivity(intent);
