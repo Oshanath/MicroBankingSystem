@@ -98,6 +98,7 @@ public class VerificationPage extends AppCompatActivity {
                             makeToast("Verified");
                             openOptionsFragment(verify_databaseHelper.getAccount(acc_no), instance_type);
                         } else {
+                            System.out.println("here");
                             makeToast("Unverified");
                         }
                     }
@@ -135,7 +136,7 @@ public class VerificationPage extends AppCompatActivity {
 
                         byte[] hash = new byte[hashJson.length()];
                         for(int j = 0; j < hashJson.length(); j++){
-                            hash[i] = (byte)(hashJson.getInt(j));
+                            hash[j] = (byte)(hashJson.getInt(j));
                         }
 
                         verify_databaseHelper.addAccount(new AccountModel(account_number, balance, acc_type, hash));
@@ -236,6 +237,14 @@ public class VerificationPage extends AppCompatActivity {
 
         return equals;
 
+    }
+
+    public static void printHash(byte[] hash){
+        for(int i = 0; i < hash.length; i++){
+            System.out.print(hash[i]);
+            System.out.print(" ");
+        }
+        System.out.println("");
     }
     
     private void makeToast(String message){
