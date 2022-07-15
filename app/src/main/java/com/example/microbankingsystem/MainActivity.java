@@ -2,6 +2,7 @@ package com.example.microbankingsystem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.microbankingsystem.ui.OpeningWindow;
@@ -24,6 +25,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -34,11 +46,20 @@ public class MainActivity extends AppCompatActivity {
     EditText tv_usr_name;
     EditText tv_password;
 
-//    String usrName = "", password = "";
+    String url;
+    String agentID;
+    String username, password;
+
+    OkHttpClient client;
+
+    SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        client = new OkHttpClient();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -49,32 +70,8 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//<<<<<<< HEAD
-//
-//        // initializing of buttons
-//        btn_test = findViewById(R.id.button_test);
-//
-//
-//        // calling setOnClickListner on initialized buttons
-//        btn_test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                testact();
-//            }
-//        });
-//=======
-//>>>>>>> 31af53fee54dcf8017ff56b87b5e3785ae6f7ede
-
-
         // Setting the system alarm to sync at 3.00pm daily
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
         SharedPreferences.Editor edit = prefs.edit();
         if(!previouslyStarted) {
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         // setting the login page to show up only in the first app launch.
         boolean previouslySignedIn = prefs.getBoolean(getString(R.string.pref_previously_signed_in), false);
         if(previouslySignedIn){
-            openOpeningWindow();
+            openOpeningWindow(agentID);
         }
 
         // initializing of buttons
@@ -103,17 +100,11 @@ public class MainActivity extends AppCompatActivity {
         btn_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String usrName = tv_usr_name.getText().toString();
-                String password = tv_password.getText().toString();
+                username = tv_usr_name.getText().toString();
+                password = tv_password.getText().toString();
 
-                if (logInWith(usrName, password)){
-                    edit.putBoolean(getString(R.string.pref_previously_signed_in), Boolean.TRUE);
-                    edit.commit();
-                    Toast.makeText(MainActivity.this, "Successfully logged", Toast.LENGTH_SHORT).show();
-                    openOpeningWindow();
-                }else{
-                    Toast.makeText(MainActivity.this, "Login credentials are incorrect", Toast.LENGTH_SHORT).show();
-                }
+                VerifyAgent verifyAgent = new VerifyAgent();
+                verifyAgent.execute();
 
             }
         });
@@ -150,19 +141,54 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public boolean logInWith(String userName, String password){
-        //do the validation here
-        if(userName.equals("aa") && password.equals("aa")){
-            return true;
-        }else{
-            return false;
-        }
-//        return true;
+
+    public void openOpeningWindow(String agentID){
+        Intent test = new Intent(this, OpeningWindow.class);
+        test.putExtra("agentID",agentID);
+        startActivity(test);
     }
 
-    public void openOpeningWindow(){
-        Intent test = new Intent(this, OpeningWindow.class);
-        startActivity(test);
+    public class VerifyAgent extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            url = "http://10.0.2.2:8083/agentSignIn";
+
+            RequestBody formBody = new FormBody.Builder()
+                    .add("agentID", username)
+                    .add("acc_no", password)
+                    .build();
+
+            Request request = new Request.Builder().url(url).post(formBody).build();
+
+            Response response = null;
+
+            try {
+
+                response = client.newCall(request).execute();
+                JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
+                String success = jsonObject.getString("message");
+
+                if( success.equals("success")){
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putBoolean(getString(R.string.pref_previously_signed_in), Boolean.TRUE);
+                    edit.commit();
+                    agentID = username;
+                    openOpeningWindow(agentID);
+                }
+                else if ( success.equals("user not found")) {
+                    Toast.makeText(MainActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                }
+                else if ( success.equals("password mismatch")){
+                    Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }
