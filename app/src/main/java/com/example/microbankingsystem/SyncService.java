@@ -5,10 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.example.microbankingsystem.ui.UpdateCloud;
+import com.example.microbankingsystem.ui.VerificationPage;
+
 public class SyncService extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Sync function
-        Toast.makeText(context, "it's working", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(context, "working", Toast.LENGTH_SHORT).show();
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+
+        String agentID = (String) intent.getSerializableExtra("agentID");
+
+        UpdateCloud updateCloud = new UpdateCloud(dbHelper.getAllTransactions(),agentID);
+        updateCloud.execute();
+
+        dbHelper.clearTransactions();
     }
 }

@@ -28,7 +28,7 @@ public class AlarmHandler {
             calendar.set(Calendar.SECOND, 00);
             long firstMillis = calendar.getTimeInMillis();
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis, AlarmManager.INTERVAL_DAY, pIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis, 65000 , pIntent);
             Toast.makeText(context, "Alarm is set.", Toast.LENGTH_SHORT).show();
         }
     }

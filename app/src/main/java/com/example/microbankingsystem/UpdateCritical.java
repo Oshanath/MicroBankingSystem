@@ -33,7 +33,6 @@ public class UpdateCritical extends AsyncTask {
                 .build();
 
         String url = "http://10.0.2.2:8083/criticalTransaction";
-        System.out.println(formBody);
 
         OkHttpClient client = new OkHttpClient();
 
