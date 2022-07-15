@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
@@ -25,16 +23,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.Buffer;
 
 public class VerificationPage extends AppCompatActivity {
 
@@ -66,8 +61,10 @@ public class VerificationPage extends AppCompatActivity {
         Bundle extras;
         extras = getIntent().getExtras();
         String transaction_type = extras.getString("i_type");
-        if (transaction_type.equals("n")){
+        if (transaction_type.equals("c")){
             btn_sync.setVisibility(View.INVISIBLE);
+        } else if (transaction_type.equals("n")){
+            tv_nic.setVisibility(View.INVISIBLE);
         }
 
         btn_sync.setOnClickListener(new View.OnClickListener() {
@@ -242,7 +239,7 @@ public class VerificationPage extends AppCompatActivity {
         acc_no = String.valueOf(tv_acc.getText());
         pin = String.valueOf(tv_pin.getText());
 
-        if ( nic.equals("") || acc_no.equals("") || pin.equals("")){
+        if ( acc_no.equals("") || pin.equals("")){
             makeToast("Enter all details");
             return false;
         }
@@ -254,8 +251,8 @@ public class VerificationPage extends AppCompatActivity {
     private void findByViews() {
         btn_verification_check = findViewById(R.id.btn_verification_check);
         btn_sync = findViewById(R.id.btn_sync);
-        tv_acc = findViewById(R.id.txt_acc_no);
-        tv_nic = findViewById(R.id.txt_nic_num);
+        tv_acc = findViewById(R.id.tv_pw);
+        tv_nic = findViewById(R.id.tv_usr_name);
         tv_pin = findViewById(R.id.txt_pin);
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
@@ -34,6 +35,7 @@ public class DepositFragment extends AppCompatActivity {
     String accNo,type;
     String date;
     EditText amount;
+    TextView viewAccNo;
 
     OkHttpClient client;
 
@@ -50,9 +52,13 @@ public class DepositFragment extends AppCompatActivity {
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
 
+
         accNo = accountModel.getAccountNo();
         type = "Deposit";
         date = "2022/07/05";
+
+        viewAccNo = findViewById(R.id.textView4);
+        viewAccNo.setText(accNo);
 
         make_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
