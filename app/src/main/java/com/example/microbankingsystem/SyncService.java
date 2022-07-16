@@ -16,25 +16,16 @@ public class SyncService extends BroadcastReceiver {
 
         Toast.makeText(context, "working", Toast.LENGTH_SHORT).show();
         DatabaseHelper dbHelper = new DatabaseHelper(context);
+        String agentID = dbHelper.getAgentID();
 
-//        String agentID = (String) intent.getSerializableExtra("agentID");
-
-//====================================
-//        String action = intent.getAction();
-        String action = intent.getStringExtra("agentID");
-
-//        String agentID="";
-//        if(action.equals("agentID.string")){
-//            agentID = intent.getExtras().getString("agentID");
-//        }
 
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println(action);
+        System.out.println(agentID);
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 //====================================
 
-        UpdateCloud updateCloud = new UpdateCloud(dbHelper.getAllTransactions(),action);
+        UpdateCloud updateCloud = new UpdateCloud(dbHelper.getAllTransactions(), agentID);
         updateCloud.execute();
 
         dbHelper.clearTransactions();

@@ -10,11 +10,9 @@ import android.widget.Button;
 import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.R;
 
-import java.io.Serializable;
-
 public class OptionsFragment extends AppCompatActivity {
 
-    Button btn_cashDeposit, btn_cashWithdrawal, btn_logout;
+    Button btn_cashDeposit, btn_cashWithdrawal, btn_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +21,7 @@ public class OptionsFragment extends AppCompatActivity {
 
         btn_cashDeposit = findViewById(R.id.btn_deposit);
         btn_cashWithdrawal = findViewById(R.id.btn_withdraw);
-        btn_logout = findViewById(R.id.btn_logout);
+        btn_home = findViewById(R.id.btn_home);
 
         AccountModel accountModel = (AccountModel) getIntent().getSerializableExtra("Account");
         String instance_type = (String) getIntent().getSerializableExtra("i_type");
@@ -43,7 +41,7 @@ public class OptionsFragment extends AppCompatActivity {
             }
         });
 
-        btn_logout.setOnClickListener(new View.OnClickListener() {
+        btn_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { openOpeningWindow();}
         });

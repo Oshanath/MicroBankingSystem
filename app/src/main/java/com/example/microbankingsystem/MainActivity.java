@@ -10,6 +10,7 @@ import com.example.microbankingsystem.ui.OpeningWindow;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
         SharedPreferences.Editor edit = prefs.edit();
         if(!previouslyStarted) {
-//          SharedPreferences.Editor edit = prefs.edit();
           edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
           edit.commit();
           //function
@@ -176,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
                     edit.putBoolean(getString(R.string.pref_previously_signed_in), Boolean.TRUE);
                     edit.commit();
                     agentID = username;
+                    DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+                    databaseHelper.addAgentID(username);
                     openOpeningWindow(agentID);
                 }
                 else if ( success.equals("user not found")) {

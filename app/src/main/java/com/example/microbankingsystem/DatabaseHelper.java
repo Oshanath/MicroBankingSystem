@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.net.PortUnreachableException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_BALANCE = "BALANCE";
     public static final String COLUMN_PIN = "PIN";
     public static final String COLUMN_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+    public static final String TABLE_AGENT_ID = "AGENT_ID";
+    public static final String COLUMN_AGENT_ID = "AGENT_ID";
 
 
     public DatabaseHelper(@Nullable Context context) {
@@ -36,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
         String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " BLOB NOT NULL)";
+        String createAgentIDTable = "CREATE TABLE" + TABLE_AGENT_ID + " ( " + COLUMN_AGENT_ID + "VARCHAR(5) PRIMARY KEY NOT NULL )";
         sqLiteDatabase.execSQL(createAccountTable);
         sqLiteDatabase.execSQL(createTransactionTable);
     }
@@ -220,6 +224,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(queryStatement, new String[]{AccNo});
         return cursor;
+    }
+
+    public boolean addAgentID(String agentID){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_AGENT_ID, agentID);
+
+        long insert = -1;
+        try {
+            insert = sqLiteDatabase.insert(TABLE_AGENT_ID, null, cv);
+        } catch(SQLiteConstraintException e){
+            e.printStackTrace();
+        }
+
+        if(insert==-1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public String getAgentID(){
+        String agentID = null;
+        Cursor cursor = readAllFromTable(TABLE_AGENT_ID);
+        if(cursor.moveToFirst()){
+            agentID = cursor.getString(0);
+        }
+        return agentID;
+    }
+
+    public void deleteAgentID(){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String truncateTableQuery = "DELETE FROM " + TABLE_AGENT_ID ;
+        sqLiteDatabase.execSQL(truncateTableQuery);
     }
 
     private Cursor readAllFromTable(String dbName){

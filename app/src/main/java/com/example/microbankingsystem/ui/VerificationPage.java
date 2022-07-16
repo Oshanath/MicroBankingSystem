@@ -2,12 +2,15 @@ package com.example.microbankingsystem.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +18,10 @@ import android.widget.Toast;
 
 import com.example.microbankingsystem.AccountModel;
 import com.example.microbankingsystem.DatabaseHelper;
+import com.example.microbankingsystem.MainActivity;
 import com.example.microbankingsystem.R;
 import com.example.microbankingsystem.Sync;
+import com.example.microbankingsystem.SyncService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +61,8 @@ public class VerificationPage extends AppCompatActivity {
         findByViews();
 
         client = new OkHttpClient();
-        agentID = "190488J";
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        agentID = databaseHelper.getAgentID();
 
         instance_type = getIntent().getExtras().getString("i_type");
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);
@@ -165,12 +171,6 @@ public class VerificationPage extends AppCompatActivity {
         intent.putExtra("Account", accountModel);
         intent.putExtra("i_type", instance_type);
         intent.putExtra("agentID", agentID);
-
-        Intent newIntent = new Intent("agentID.string");
-        newIntent.putExtra("agentID", agentID);
-        sendBroadcast(newIntent);
-
-
 
         startActivity(intent);
     }
