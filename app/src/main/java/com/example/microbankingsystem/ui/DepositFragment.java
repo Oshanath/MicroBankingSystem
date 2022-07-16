@@ -77,7 +77,6 @@ public class DepositFragment extends AppCompatActivity {
                     deposit_DBHelper = new DatabaseHelper(DepositFragment.this);
 
                     success = deposit_DBHelper.record_transaction(transactionModel);
-                    Toast.makeText(DepositFragment.this, ""+success, Toast.LENGTH_SHORT).show();
 
                     if(deposit_DBHelper.getLastID() >= 2){
 
