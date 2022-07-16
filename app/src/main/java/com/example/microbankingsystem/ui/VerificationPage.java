@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +61,8 @@ public class VerificationPage extends AppCompatActivity {
         findByViews();
 
         client = new OkHttpClient();
-        agentID = "190488J";
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        agentID = databaseHelper.getAgentID();
 
         instance_type = getIntent().getExtras().getString("i_type");
         verify_databaseHelper = new DatabaseHelper(VerificationPage.this);

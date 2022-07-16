@@ -36,5 +36,19 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_transaction_normal"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/round_button"
+        android:text="@string/btnLogout"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_transaction_critical"
+        app:layout_constraintVertical_bias="0.823" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
