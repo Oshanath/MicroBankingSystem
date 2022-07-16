@@ -37,8 +37,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, " + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE + " VARCHAR(10) NOT NULL)";
-        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, " + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " BLOB NOT NULL)";
+        String createAccountTable = "CREATE TABLE " + ACCOUNTS + " ( " + COLUMN_ACCOUNT_NO + " VARCHAR(10) PRIMARY KEY NOT NULL, " + COLUMN_BALANCE + " DOUBLE NOT NULL, "
+                + COLUMN_ACCOUNT_TYPE + " VARCHAR(6) NOT NULL, " + COLUMN_PIN + " BLOB NOT NULL, CHECK ( " +COLUMN_BALANCE+ " >=0 ) )";
+        String createTransactionTable = "CREATE TABLE " + TRANSACTIONS + " ( " + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_ACC_NO + " VARCHAR(10) NOT NULL, " + COLUMN_AMOUNT + " DOUBLE NOT NULL, "
+                + COLUMN_TYPE + " VARCHAR(10) NOT NULL, " + COLUMN_TRANS_DATE
+                + " VARCHAR(10) NOT NULL, FOREIGN KEY (" + COLUMN_ACC_NO+ ") REFERENCES " +ACCOUNTS+ "(" +COLUMN_ACCOUNT_NO+ "))";
         String createAgentIDTable = "CREATE TABLE " + TABLE_AGENT_ID + " ( " + COLUMN_AGENT_ID + " VARCHAR(5) PRIMARY KEY NOT NULL )";
         sqLiteDatabase.execSQL(createAccountTable);
         sqLiteDatabase.execSQL(createTransactionTable);
