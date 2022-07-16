@@ -45,7 +45,14 @@
         
         <receiver
             android:name=".SyncService"
-            android:enabled="true"/>
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="agentID.string" />
+            </intent-filter>
+        </receiver>
+
+
         
     </application>
 

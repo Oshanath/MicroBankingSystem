@@ -20,20 +20,21 @@ public class SyncService extends BroadcastReceiver {
 //        String agentID = (String) intent.getSerializableExtra("agentID");
 
 //====================================
-        String action = intent.getAction();
+//        String action = intent.getAction();
+        String action = intent.getStringExtra("agentID");
 
-        String agentID="";
-        if(action.equals("agentID.string")){
-            agentID = intent.getExtras().getString("agentID");
-        }
+//        String agentID="";
+//        if(action.equals("agentID.string")){
+//            agentID = intent.getExtras().getString("agentID");
+//        }
 
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println(agentID);
+        System.out.println(action);
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 //====================================
 
-        UpdateCloud updateCloud = new UpdateCloud(dbHelper.getAllTransactions(),agentID);
+        UpdateCloud updateCloud = new UpdateCloud(dbHelper.getAllTransactions(),action);
         updateCloud.execute();
 
         dbHelper.clearTransactions();
