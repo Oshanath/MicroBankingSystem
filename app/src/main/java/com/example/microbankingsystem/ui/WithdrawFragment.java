@@ -82,6 +82,7 @@ public class WithdrawFragment extends AppCompatActivity {
                         }
 
                         if (success) {
+                            Toast.makeText(WithdrawFragment.this, "Success", Toast.LENGTH_SHORT).show();
                             openOptionsFragment(accountModel, instance_type, agentID);
                         }
                     }
@@ -100,6 +101,7 @@ public class WithdrawFragment extends AppCompatActivity {
                     }
 
                     if (success) {
+                        Toast.makeText(WithdrawFragment.this, "Success", Toast.LENGTH_SHORT).show();
                         openOptionsFragment(accountModel, instance_type, agentID);
                     }
                     else{
