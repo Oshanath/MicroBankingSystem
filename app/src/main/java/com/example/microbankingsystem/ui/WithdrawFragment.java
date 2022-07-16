@@ -62,14 +62,15 @@ public class WithdrawFragment extends AppCompatActivity {
                 date = sdf.format(new Date());
                 TransactionModel transactionModel = new TransactionModel(1, accNo, requested_amount, type, date);
 
+                boolean success = false;
+
                 if(instance_type.equals("n")) {
 
                     DatabaseHelper withdrawDBHelper = new DatabaseHelper(WithdrawFragment.this);
 
                     if ( requested_amount < withdrawDBHelper.getAccountBalance(accNo)){
 
-                        boolean success = withdrawDBHelper.record_transaction(transactionModel);
-                        Toast.makeText(WithdrawFragment.this, ""+success, Toast.LENGTH_SHORT).show();
+                        success = withdrawDBHelper.record_transaction(transactionModel);
 
                         if(withdrawDBHelper.getLastID() >= 2){
 
@@ -89,17 +90,16 @@ public class WithdrawFragment extends AppCompatActivity {
                     }
                 }
                 else{
-                    String success="";
                     UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
                     try {
-                        success = (String) updateCritical.execute().get();
+                        success = (boolean) updateCritical.execute().get();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    if (success.equals("success")) {
+                    if (success) {
                         openOptionsFragment(accountModel, instance_type, agentID);
                     }
                     else{

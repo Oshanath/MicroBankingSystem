@@ -216,9 +216,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor readAccNoAndPin(String AccNo){
-        String queryStatement = "select "+ COLUMN_ACCOUNT_NO+ ","+ COLUMN_PIN+ " from " + ACCOUNTS+ " where " + COLUMN_ACCOUNT_NO + "=\"" + AccNo + "\"";
+        String queryStatement = "select "+ COLUMN_ACCOUNT_NO+ ","+ COLUMN_PIN+ " from " + ACCOUNTS+ " where " + COLUMN_ACCOUNT_NO + "=\" ? \"";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(queryStatement, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(queryStatement, new String[]{AccNo});
         return cursor;
     }
 
