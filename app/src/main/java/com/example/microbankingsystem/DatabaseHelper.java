@@ -230,6 +230,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public void clearAccountTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String truncateTable = "DELETE FROM " + ACCOUNTS ;
+        db.execSQL(truncateTable);
+    }
+
     public boolean addAgentID(String agentID){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

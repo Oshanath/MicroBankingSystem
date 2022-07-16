@@ -65,6 +65,8 @@ public class OpeningWindow extends AppCompatActivity {
 
     private void logOut(){
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        databaseHelper.clearTransactions();
+        databaseHelper.clearAccountTable();
         databaseHelper.deleteAgentID();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
