@@ -70,11 +70,13 @@ public class DepositFragment extends AppCompatActivity {
                 date = sdf.format(new Date());
                 TransactionModel transactionModel = new TransactionModel(1, accNo, Double.parseDouble(amount.getText().toString()), type, date);
 
+                boolean success = false;
+
                 if(instance_type.equals("n")) {
 
                     deposit_DBHelper = new DatabaseHelper(DepositFragment.this);
 
-                    boolean success = deposit_DBHelper.record_transaction(transactionModel);
+                    success = deposit_DBHelper.record_transaction(transactionModel);
                     Toast.makeText(DepositFragment.this, ""+success, Toast.LENGTH_SHORT).show();
 
                     if(deposit_DBHelper.getLastID() >= 2){
@@ -85,29 +87,25 @@ public class DepositFragment extends AppCompatActivity {
                         deposit_DBHelper.clearTransactions();
 
                     }
-
-                    if (success) {
-                        openOptionsFragment(accountModel, instance_type, agentID);
-                    }
                 }
                 else{
 
-                    String success="";
                     UpdateCritical updateCritical = new UpdateCritical(transactionModel, agentID);
                     try {
-                        success = (String) updateCritical.execute().get();
+                        success = (boolean) updateCritical.execute().get();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
 
-                    if (success.equals("success")) {
-                        openOptionsFragment(accountModel, instance_type, agentID);
-                    }
-                    else{
-                        Toast.makeText(DepositFragment.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
+                if (success) {
+                    Toast.makeText(DepositFragment.this, "Success", Toast.LENGTH_SHORT).show();
+                    openOptionsFragment(accountModel, instance_type, agentID);
+                }
+                else{
+                    Toast.makeText(DepositFragment.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });

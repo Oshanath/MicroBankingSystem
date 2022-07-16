@@ -48,7 +48,12 @@ public class UpdateCritical extends AsyncTask {
         try {
             response = client.newCall(request).execute();
             JSONObject jsonObject = new JSONObject(String.valueOf(response.body().string()));
-            return jsonObject.getString("message");
+            if( jsonObject.getString("message").equals("success")){
+                return true;
+            }
+            else{
+                return false;
+            }
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
