@@ -41,7 +41,7 @@ public class Sync extends AsyncTask {
             for(int i=0; i<jsonArray.length(); i++){
                 String account_number = jsonArray.getJSONObject(i).getString("number");
 
-                if ( !existing_accounts.contains(account_number)){
+                if ( existing_accounts==null || !existing_accounts.contains(account_number)){
                     double balance = jsonArray.getJSONObject(i).getDouble("balance");
                     String acc_type = jsonArray.getJSONObject(i).getString("type");
                     JSONArray hashJson = jsonArray.getJSONObject(i).getJSONArray("pin");
